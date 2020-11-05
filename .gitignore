@@ -1,2 +1,3 @@
 /kiosk/images/*.iso
 /.idea
+/master-console/.idea/
