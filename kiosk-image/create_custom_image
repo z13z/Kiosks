@@ -24,7 +24,7 @@ dbus-uuidgen > /var/lib/dbus/machine-id
 dpkg-divert --local --rename --add /sbin/initctl
 ln -s /bin/true /sbin/initctl
 
-#running commands for kiosk creation from empty ubuntu
+#running commands for kiosk-image creation from empty ubuntu
 RUN_PATH/prepare_kiosk
 
 apt clean
