@@ -1,5 +1,6 @@
 #!/bin/sh
 #Script is made from documentation https://help.ubuntu.com/community/LiveCDCustomization
+RUN_PATH=$(pwd)
 sudo apt install -y squashfs-tools genisoimage
 mkdir ~/livecdtmp
 scp ubuntu-18.04-desktop-amd64.iso ~/livecdtmp
@@ -22,7 +23,10 @@ export LC_ALL=C
 dbus-uuidgen > /var/lib/dbus/machine-id
 dpkg-divert --local --rename --add /sbin/initctl
 ln -s /bin/true /sbin/initctl
-#todo zaza some commands here
+
+#running commands for kiosk creation from empty ubuntu
+RUN_PATH/prepare_kiosk
+
 apt clean
 rm -rf /tmp/* ~/.bash_history
 rm /etc/resolv.conf
