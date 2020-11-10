@@ -7,9 +7,6 @@ mkdir build &&\
 cd build &&\
 mkdir -p mnt &&\
 mkdir -p extract-cd &&\
-mkdir -p workspace &&\
-scp ../prepare_kiosk workspace &&\
-scp ../chroot_commands workspace &&\
 scp ../images/${BASE_IMAGE_NAME} . &&\
 sudo mount -o loop ${BASE_IMAGE_NAME} mnt &&\
 sudo rsync --exclude=/casper/filesystem.squashfs -a mnt/ extract-cd &&\
@@ -19,7 +16,8 @@ sudo cp /etc/resolv.conf edit/etc/ &&\
 sudo mount -o bind /run/ edit/run &&\
 sudo mount --bind /dev/ edit/dev &&\
 sudo mkdir edit/workspace &&\
-sudo mount --bind workspace edit/workspace &&\
+scp ../prepare_kiosk edit/workspace &&\
+scp ../chroot_commands edit/workspace &&\
 sudo chmod +w extract-cd/casper/filesystem.manifest &&\
 sudo chroot edit /workspace/chroot_commands &&\
 echo Producing the CD image &&\
@@ -39,11 +37,10 @@ sudo rm md5sum.txt &&\
 find -type f -print0 | sudo xargs -0 md5sum | grep -v isolinux/boot.cat | sudo tee md5sum.txt &&\
 echo the ISO image &&\
 sudo mkisofs -D -r -V "$IMAGE_NAME" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o ../ubuntu-9.04.1-desktop-i386-custom.iso . &&\
-sudo chown "$USER" *.iso &&\
+cd ..
 umount mnt &&\
 rm -r mnt &&\
 rm -rf edit &&\
 rm -rf extract-cd &&\
 rm -rf workspace &&\
 rm -rf $BASE_IMAGE_NAME
-echo Completed

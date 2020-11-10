@@ -23,5 +23,4 @@ umount /sys
 umount /dev/pts
 umount /dev
 umount /run
-umount /workspace
 exit 0
