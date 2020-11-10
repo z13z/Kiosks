@@ -6,8 +6,7 @@ build: images/${BASE_UBUNTU_IMAGE_NAME} chroot_commands create_custom_image prep
 				./create_custom_image ${BASE_UBUNTU_IMAGE_NAME}
 
 clean:
-	sudo umount -R --force build
-	rm -rf build
+	sudo rm -rf build
 
 
 .PHONY: buildo

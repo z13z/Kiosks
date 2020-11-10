@@ -5,9 +5,9 @@ IMAGE_NAME=Kiosk &&\
 sudo apt install -y squashfs-tools genisoimage &&\
 mkdir build &&\
 cd build &&\
-mkdir mnt &&\
+mkdir -p mnt &&\
 mkdir -p extract-cd &&\
-mkdir workspace &&\
+mkdir -p workspace &&\
 scp ../prepare_kiosk workspace &&\
 scp ../chroot_commands workspace &&\
 scp ../images/${BASE_IMAGE_NAME} . &&\
@@ -20,32 +20,30 @@ sudo mount -o bind /run/ edit/run &&\
 sudo mount --bind /dev/ edit/dev &&\
 sudo mkdir edit/workspace &&\
 sudo mount --bind workspace edit/workspace &&\
+sudo chmod +w extract-cd/casper/filesystem.manifest &&\
 sudo chroot edit /workspace/chroot_commands &&\
 echo Producing the CD image &&\
-sudo chmod +w extract-cd/casper/filesystem.manifest &&\
-sudo su &&\
-sudo chroot edit dpkg-query -W --showformat='${Package} ${Version}\n' > extract-cd/casper/filesystem.manifest &&\
-exit &&\
+
+#sudo su &&\
+#sudo chroot edit dpkg-query -W --showformat='${Package} ${Version}\n' > extract-cd/casper/filesystem.manifest &&\
+#exit &&\
 sudo cp extract-cd/casper/filesystem.manifest extract-cd/casper/filesystem.manifest-desktop &&\
 sudo sed -i '/ubiquity/d' extract-cd/casper/filesystem.manifest-desktop &&\
 sudo sed -i '/casper/d' extract-cd/casper/filesystem.manifest-desktop &&\
 echo Compression &&\
 sudo mksquashfs edit extract-cd/casper/filesystem.squashfs -b 1048576 &&\
-sudo su &&\
 printf $(du -sx --block-size=1 edit | cut -f1) > extract-cd/casper/filesystem.size &&\
-exit &&\
 echo old md5sum.txt and calculate new md5 sums &&\
 cd extract-cd &&\
 sudo rm md5sum.txt &&\
 find -type f -print0 | sudo xargs -0 md5sum | grep -v isolinux/boot.cat | sudo tee md5sum.txt &&\
 echo the ISO image &&\
 sudo mkisofs -D -r -V "$IMAGE_NAME" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o ../ubuntu-9.04.1-desktop-i386-custom.iso . &&\
-sudo chown "$USER" build/* &&\
-sudo su &&\
+sudo chown "$USER" *.iso &&\
 umount mnt &&\
+rm -r mnt &&\
 rm -rf edit &&\
 rm -rf extract-cd &&\
-rm -rf mnt &&\
 rm -rf workspace &&\
-rm -rf $BASE_IMAGE_NAME &&\
-exit
+rm -rf $BASE_IMAGE_NAME
+echo Completed

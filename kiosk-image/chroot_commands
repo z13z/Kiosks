@@ -10,7 +10,7 @@ ln -s /bin/true /sbin/initctl
 
 #running commands for kiosk-image creation from empty ubuntu
 chmod +x prepare_kiosk
-/workspace/prepare_kiosk
+. /workspace/prepare_kiosk
 
 apt clean
 rm -rf /tmp/* ~/.bash_history
@@ -22,6 +22,6 @@ umount /proc || umount -lf /proc
 umount /sys
 umount /dev/pts
 umount /dev
-umount /workspace
 umount /run
+umount /workspace
 exit 0
