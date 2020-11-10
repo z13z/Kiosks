@@ -1,3 +1,4 @@
-/kiosk/images/*.iso
+/kiosk-image/images/*.iso
+/kiosk-image/build
 /.idea
 /master-console/.idea/
