@@ -4,6 +4,7 @@ import {BrowserRouter, Route} from 'react-router-dom'
 import NavigationWidget from './components/navigation/NavigationWidget'
 import KiosksPage from "./components/pages/kiosks/KiosksPage";
 import ImagesPage from "./components/pages/images/ImagesPage";
+import StatisticsPage from "./components/pages/statistics/StatisticsPage";
 
 class App extends Component {
 
@@ -12,6 +13,7 @@ class App extends Component {
             <BrowserRouter>
                 <div style={{display: "flex"}}>
                     <NavigationWidget/>
+                    <Route exact path="/*" component={StatisticsPage}/>
                     <Route exact path="/kiosks" component={KiosksPage}/>
                     <Route exact path="/images" component={ImagesPage}/>
                 </div>
