@@ -2,6 +2,7 @@ import React from 'react'
 import './KiosksPage.css'
 import RightPanel from "../common/RightPanel/RightPanel"
 import SearchPanel from "../common/SearchPanel/SearchPanel"
+import KiosksGrid from "./KiosksGrid";
 
 function kiosksPage() {
     return (
@@ -19,13 +20,7 @@ function kiosksPage() {
                 </label>
                 <button>search</button>
             </SearchPanel>
-
-            <ul className="KiosksPageDiv">
-                <li>
-                    kiosks
-                </li>
-            </ul>
-
+            <KiosksGrid/>
         </RightPanel>
 
     )
