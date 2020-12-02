@@ -1,11 +1,14 @@
 import React from 'react'
 import './StatisticsPage.css'
+import RightPanel from "../common/RightPanel"
 
-function statisticsPage(){
+function statisticsPage() {
     return (
-        <div className="StatisticsPageDiv">
-            statistics
-        </div>
+        <RightPanel>
+            <div className="StatisticsPageDiv">
+                statistics
+            </div>
+        </RightPanel>
     )
 }
 

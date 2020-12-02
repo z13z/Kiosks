@@ -1,12 +1,17 @@
 import React from 'react'
 import './KiosksPage.css'
+import RightPanel from "../common/RightPanel"
 
-function KiosksPage(){
+function kiosksPage() {
     return (
-        <div className="KiosksPageDiv">
-            kiosks
-        </div>
+        <RightPanel>
+            <ul className="KiosksPageDiv">
+                <li>
+                    kiosks
+                </li>
+            </ul>
+        </RightPanel>
     )
 }
 
-export default KiosksPage
+export default kiosksPage

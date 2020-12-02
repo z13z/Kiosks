@@ -1,11 +1,14 @@
 import React from 'react'
 import "./ImagePage.css"
+import RightPanel from  "../common/RightPanel"
 
 function imagesPage(){
     return (
-        <div className="ImagePageDiv">
-            images
-        </div>
+        <RightPanel>
+            <div className="ImagePageDiv">
+                images
+            </div>
+        </RightPanel>
     )
 }
 
