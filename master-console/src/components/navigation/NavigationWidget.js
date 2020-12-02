@@ -1,8 +1,8 @@
 import React from 'react'
-import {Link, NavLink} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import './NavigationWidget.css'
 
-function NavigationWidget() {
+function navigationWidget() {
     let links = [{address: "/", name: "home"}, {address: "/kiosks", name: "kiosks"}, {
         address: "images",
         name: "images"
@@ -22,4 +22,4 @@ function NavigationWidget() {
     )
 }
 
-export default NavigationWidget
+export default navigationWidget

@@ -1,7 +1,7 @@
 import React from 'react'
 import "./ImagePage.css"
 
-function ImagesPage(){
+function imagesPage(){
     return (
         <div className="ImagePageDiv">
             images
@@ -9,4 +9,4 @@ function ImagesPage(){
     )
 }
 
-export default ImagesPage
+export default imagesPage

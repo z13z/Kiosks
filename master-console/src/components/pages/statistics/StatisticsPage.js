@@ -1,7 +1,7 @@
 import React from 'react'
 import './StatisticsPage.css'
 
-function StatisticsPage(){
+function statisticsPage(){
     return (
         <div className="StatisticsPageDiv">
             statistics
@@ -9,4 +9,4 @@ function StatisticsPage(){
     )
 }
 
-export default StatisticsPage
+export default statisticsPage
