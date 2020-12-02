@@ -1,0 +1,12 @@
+.SearchPanelDiv{
+    flex: 80%;
+    display: flex;
+    margin: 12px;
+    background-color: darkblue;
+    width: 90%;
+}
+
+.SearchPanelComponent{
+    margin: 5px;
+    color: lightblue;
+}

@@ -1,6 +1,6 @@
 import React from 'react'
 import "./ImagePage.css"
-import RightPanel from  "../common/RightPanel"
+import RightPanel from "../common/RightPanel/RightPanel"
 
 function imagesPage(){
     return (
