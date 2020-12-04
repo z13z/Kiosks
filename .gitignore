@@ -2,3 +2,4 @@
 /kiosk-image/build
 /.idea
 /master-console/.idea/
+/master-server/pkg/mod/
