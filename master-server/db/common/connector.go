@@ -36,7 +36,6 @@ func (connector *DBConnector) GetObjectsFromDb(entity IEntity) *[]interface{} {
 func (connector *DBConnector) selectRowsFromDb(tableName string, fieldNames *[]string, fieldValueHolders *[]interface{},
 	entityCreator func() IEntity) *[]interface{} {
 	fieldNamesStr := strings.Join(*fieldNames, ", ")
-	fieldNamesStr = fieldNamesStr[:len(fieldNamesStr)-2]
 	rows, err := connector.pool.Query(fmt.Sprintf("SELECT %s FROM %s", fieldNamesStr, tableName))
 	if err != nil {
 		panic(err.Error())
