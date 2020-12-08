@@ -11,14 +11,19 @@ type DBConnector struct {
 	pool *sql.DB
 }
 
-const databaseName = "kiosks"
+//todo move to external configuration
+const dbName = "kiosks"
 const dbDriverName = "postgres"
+const dbUser = "postgres"
+const dbPassword = "postgres"
+const dbHost = "localhost"
+const dbPort = "5432"
 
-func NewDBConnector(user, password, host, port string) *DBConnector {
+func NewDBConnector() *DBConnector {
 	resultConnector := new(DBConnector)
 	var err error
 	resultConnector.pool, err = sql.Open(dbDriverName, fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s sslmode=disable",
-		user, password, host, port, databaseName))
+		dbUser, dbPassword, dbHost, dbPort, dbName))
 	if err != nil {
 		panic(err.Error())
 	}
