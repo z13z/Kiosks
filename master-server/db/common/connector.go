@@ -53,7 +53,7 @@ func (connector *DBConnector) selectRowsFromDb(tableName string, fieldNames *[]s
 		err = rows.Scan(*fieldValueHolders...)
 		rowObject.SetEntityFields(getFieldNamesAndValuesMap(fieldNames, fieldValueHolders))
 		if err != nil {
-			panic(err.Error())
+			panic(err)
 		}
 		resultObjectsArray = append(resultObjectsArray, rowObject)
 	}
