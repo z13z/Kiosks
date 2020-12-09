@@ -5,18 +5,18 @@ import (
 )
 
 type KioskEntity struct {
-	id           int64
-	name         string
-	kioskImageId int64
+	Id           int64  `json:"id"`
+	Name         string `json:"name"`
+	KioskImageId int64  `json:"kioskImageId"`
 }
 
 func (kiosk *KioskEntity) SetEntityFields(fields map[string]interface{}) {
-	idValue := fields["id"]
-	nameValue := fields["name"]
-	kioskImageIdValue := fields["kioskImageId"]
-	kiosk.id = *idValue.(*int64)
-	kiosk.name = *nameValue.(*string)
-	kiosk.kioskImageId = *kioskImageIdValue.(*int64)
+	idValue := fields["Id"]
+	nameValue := fields["Name"]
+	kioskImageIdValue := fields["kiosk_image_id"]
+	kiosk.Id = *idValue.(*int64)
+	kiosk.Name = *nameValue.(*string)
+	kiosk.KioskImageId = *kioskImageIdValue.(*int64)
 }
 
 func (kiosk *KioskEntity) GetTableName() string {
@@ -24,11 +24,11 @@ func (kiosk *KioskEntity) GetTableName() string {
 }
 
 func (kiosk *KioskEntity) GetFieldNames() *[]string {
-	return &[]string{"id", "name", "kioskImageId"}
+	return &[]string{"Id", "Name", "kiosk_image_id"}
 }
 
 func (kiosk *KioskEntity) GetFieldValueHolders() *[]interface{} {
-	return &([]interface{}{&kiosk.id, &kiosk.name, &kiosk.kioskImageId})
+	return &([]interface{}{&kiosk.Id, &kiosk.Name, &kiosk.KioskImageId})
 }
 
 func (kiosk *KioskEntity) NewEntity() common.IEntity {

@@ -8,9 +8,11 @@ import (
 	"strconv"
 )
 
+type KiosksServiceHandler struct{}
+
 var kiosksBean = kiosks.NewBean()
 
-func ServeKiosksRequest(w http.ResponseWriter, r *http.Request) {
+func (KiosksServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	switch r.Method {
 	case "GET":

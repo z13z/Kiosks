@@ -19,17 +19,16 @@ func (bean *Bean) GetKiosks(offset, limit int) *[]KioskEntity {
 	resultFromDb := bean.connector.GetObjectsFromDb(&KioskEntity{}, nil, offset, limit)
 	var resultKiosks []KioskEntity
 	for _, kioskFromDb := range *resultFromDb {
-		resultKiosks = append(resultKiosks, kioskFromDb.(KioskEntity))
+		resultKiosks = append(resultKiosks, *kioskFromDb.(*KioskEntity))
 	}
 	return &resultKiosks
 }
 
 func (bean *Bean) GetKiosk(id int) *KioskEntity {
-	whereClause := "WHERE id = " + strconv.Itoa(id)
+	whereClause := "WHERE Id = " + strconv.Itoa(id)
 	resultFromDb := bean.connector.GetObjectsFromDb(&KioskEntity{}, &whereClause, 0, 1)
 	if len(*resultFromDb) == 1 {
-		result := ((*resultFromDb)[0]).(KioskEntity)
-		return &result
+		return ((*resultFromDb)[0]).(*KioskEntity)
 	}
 	return nil
 }
