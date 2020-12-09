@@ -34,14 +34,22 @@ func NewDBConnector() *DBConnector {
 	return resultConnector
 }
 
-func (connector *DBConnector) GetObjectsFromDb(entity IEntity) *[]interface{} {
-	return connector.selectRowsFromDb(entity.GetTableName(), entity.GetFieldNames(), entity.GetFieldValueHolders(), entity.NewEntity)
+func (connector *DBConnector) GetObjectsFromDb(entity IEntity, wherePart *string, offset, limit int) *[]interface{} {
+	return connector.selectRowsFromDb(entity.GetTableName(), entity.GetFieldNames(), entity.GetFieldValueHolders(),
+		entity.NewEntity, wherePart, offset, limit)
 }
 
 func (connector *DBConnector) selectRowsFromDb(tableName string, fieldNames *[]string, fieldValueHolders *[]interface{},
-	entityCreator func() IEntity) *[]interface{} {
+	entityCreator func() IEntity, wherePart *string, offset, limit int) *[]interface{} {
+	var wherePartVal string
+	if wherePart == nil {
+		wherePartVal = ""
+	} else {
+		wherePartVal = *wherePart
+	}
 	fieldNamesStr := strings.Join(*fieldNames, ", ")
-	rows, err := connector.pool.Query(fmt.Sprintf("SELECT %s FROM %s", fieldNamesStr, tableName))
+	rows, err := connector.pool.Query(fmt.Sprintf("SELECT %s FROM %s %s ORDER BY id LIMIT %d OFFSET %d",
+		fieldNamesStr, tableName, wherePartVal, limit, offset))
 	if err != nil {
 		panic(err.Error())
 	}

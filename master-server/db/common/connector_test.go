@@ -3,7 +3,9 @@ package common
 import (
 	"database/sql"
 	"database/sql/driver"
+	"fmt"
 	"github.com/DATA-DOG/go-sqlmock"
+	"math"
 	"reflect"
 	"testing"
 )
@@ -13,49 +15,64 @@ func TestDBConnector_GetObjectsFromDb(t *testing.T) {
 		pool *sql.DB
 	}
 	type args struct {
-		args MockEntity
+		entityArg   MockEntity
+		whereClause string
+		offset      int
+		limit       int
 	}
 
 	mockEntitiesToTest := make([]MockEntity, 100)
 	mockEntityHoldersToTest := make([]interface{}, 100)
 	for i := int64(0); i < 100; i++ {
-		mockEntitiesToTest[i] = MockEntity{id: i, name: ""}
+		mockEntitiesToTest[i] = MockEntity{id: i, name: fmt.Sprintf("test_kiosk_%d", i)}
 		mockEntityHoldersToTest[i] = &mockEntitiesToTest[i]
 	}
-
 	tests := []struct {
 		name   string
 		fields fields
 		args   args
 		want   *[]interface{}
 	}{
-		{name: "EmptyRowTableTest", fields: fields{getRowsDbPool()}, args: args{args: MockEntity{}}, want: &[]interface{}{}},
-		{name: "oneRowTableTest", fields: fields{getRowsDbPool(mockEntitiesToTest[0])}, args: args{args: MockEntity{}}, want: &[]interface{}{&mockEntitiesToTest[0]}},
-		{name: "multipleRowTableTest", fields: fields{getRowsDbPool(mockEntitiesToTest...)}, args: args{args: MockEntity{}}, want: &mockEntityHoldersToTest},
+		{name: "emptyRowTableTest", fields: fields{getRowsDbPool(false, 0, math.MaxInt32, "")},
+			args: args{entityArg: MockEntity{}, limit: math.MaxInt32}, want: &[]interface{}{}},
+		{name: "oneRowTableTest", fields: fields{getRowsDbPool(false, 0, math.MaxInt32, "", mockEntitiesToTest[0])},
+			args: args{entityArg: MockEntity{}, limit: math.MaxInt32}, want: &[]interface{}{&mockEntitiesToTest[0]}},
+		{name: "multipleRowTableTest", fields: fields{getRowsDbPool(false, 0, math.MaxInt32, "", mockEntitiesToTest...)},
+			args: args{entityArg: MockEntity{}, limit: math.MaxInt32}, want: &mockEntityHoldersToTest},
+		{name: "multipleRowTableWhereClauseTest", fields: fields{getRowsDbPool(true, 0, math.MaxInt32, "WHERE id = 0", mockEntitiesToTest...)},
+			args: args{entityArg: MockEntity{}, limit: math.MaxInt32, whereClause: "WHERE id = 0"}, want: &[]interface{}{&mockEntitiesToTest[0]}},
+		{name: "multipleRowTableWithOffsetTest", fields: fields{getRowsDbPool(true, 1, 1, "", mockEntitiesToTest...)},
+			args: args{entityArg: MockEntity{}, whereClause: "", offset: 1, limit: 1}, want: &[]interface{}{&mockEntitiesToTest[0]}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			connector := &DBConnector{
 				pool: tt.fields.pool,
 			}
-			if got := connector.GetObjectsFromDb(&tt.args.args); len(*tt.want) != len(*got) || len(*got) != 0 && !reflect.DeepEqual(got, tt.want) {
+			if got := connector.GetObjectsFromDb(&tt.args.entityArg, &tt.args.whereClause, tt.args.offset, tt.args.limit); len(*tt.want) != len(*got) || len(*got) != 0 && !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetObjectsFromDb() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func getRowsDbPool(entities ...MockEntity) *sql.DB {
+func getRowsDbPool(onlyFirstEntry bool, offset, limit int, wherePart string, entities ...MockEntity) *sql.DB {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		panic("problem with db mocking")
 	}
 	var rows *sqlmock.Rows
 	rows = sqlmock.NewRows([]string{"id", "name"})
-	for _, entity := range entities {
-		rows.AddRow(driver.Value(entity.id), driver.Value(entity.name))
+	if onlyFirstEntry {
+		if entities != nil && len(entities) > 0 {
+			rows.AddRow(driver.Value(entities[0].id), driver.Value(entities[0].name))
+		}
+	} else {
+		for _, entity := range entities {
+			rows.AddRow(driver.Value(entity.id), driver.Value(entity.name))
+		}
 	}
-	mock.ExpectQuery("SELECT id, name FROM Mock").WillReturnRows(rows)
+	mock.ExpectQuery(fmt.Sprintf("SELECT id, name FROM Mock %s ORDER BY id LIMIT %d OFFSET %d", wherePart, limit, offset)).WillReturnRows(rows)
 	return db
 }
 
