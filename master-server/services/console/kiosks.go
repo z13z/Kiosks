@@ -6,6 +6,7 @@ import (
 	"math"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type KiosksServiceHandler struct{}
@@ -36,7 +37,15 @@ func (KiosksServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func getKiosksList(w *http.ResponseWriter, r *http.Request) {
 	var found bool
-	kioskId, specificKiosk := getIntFromQuery(r.URL.Query()["id"])
+	kioskId, _ := getIntFromQuery(r.URL.Query()["id"])
+	kioskNameParam := r.URL.Query()["id"]
+	var kioskName string
+	if kioskNameParam != nil && len(kioskNameParam) > 1 {
+		kioskName = kioskNameParam[0]
+	} else {
+		kioskName = ""
+	}
+	oneKiosk := getBooleanFromQuery(r.URL.Query()["oneKiosk"])
 	offset, found := getIntFromQuery(r.URL.Query()["offset"])
 	if !found {
 		offset = 0
@@ -47,15 +56,19 @@ func getKiosksList(w *http.ResponseWriter, r *http.Request) {
 	}
 	var mustWrite []byte
 	var err error
-	if specificKiosk {
+	if oneKiosk {
 		mustWrite, err = json.Marshal(*kiosksBean.GetKiosk(kioskId))
 	} else {
-		mustWrite, err = json.Marshal(*kiosksBean.GetKiosks(offset, limit))
+		mustWrite, err = json.Marshal(*kiosksBean.GetKiosks(kioskId, kioskName, offset, limit))
 	}
 	if err != nil {
 		panic(err.Error())
 	}
 	writeBytesInResponse(w, &mustWrite)
+}
+
+func getBooleanFromQuery(param []string) bool {
+	return param != nil && len(param) > 0 && strings.ToLower(param[0]) == "false"
 }
 
 func getIntFromQuery(param []string) (int, bool) {

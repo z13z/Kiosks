@@ -34,13 +34,29 @@ func NewDBConnector() *DBConnector {
 	return resultConnector
 }
 
-func (connector *DBConnector) GetObjectsFromDb(entity IEntity, wherePart *string, offset, limit int) *[]interface{} {
+func (connector *DBConnector) GetObjectsFromDb(entity IEntity, whereParams *map[string]string, offset, limit int) *[]interface{} {
+	wherePart, wherePartValues := parseWherePartAndParamValues(whereParams)
 	return connector.selectRowsFromDb(entity.GetTableName(), entity.GetFieldNames(), entity.GetFieldValueHolders(),
-		entity.NewEntity, wherePart, offset, limit)
+		entity.NewEntity, wherePart, wherePartValues, offset, limit)
+}
+
+func parseWherePartAndParamValues(params *map[string]string) (*string, *[]interface{}) {
+	if params == nil || len(*params) == 0 {
+		return nil, &[]interface{}{}
+	}
+	whereQuery := "WHERE "
+	var whereQueryValues []interface{}
+	for column, value := range *params {
+		whereQuery += column + " = ?, "
+		whereQueryValues = append(whereQueryValues, value)
+	}
+	//remove last ', ' part
+	whereQuery = whereQuery[:len(whereQuery)-2]
+	return &whereQuery, &whereQueryValues
 }
 
 func (connector *DBConnector) selectRowsFromDb(tableName string, fieldNames *[]string, fieldValueHolders *[]interface{},
-	entityCreator func() IEntity, wherePart *string, offset, limit int) *[]interface{} {
+	entityCreator func() IEntity, wherePart *string, wherePartValues *[]interface{}, offset, limit int) *[]interface{} {
 	var wherePartVal string
 	if wherePart == nil {
 		wherePartVal = ""
@@ -49,7 +65,7 @@ func (connector *DBConnector) selectRowsFromDb(tableName string, fieldNames *[]s
 	}
 	fieldNamesStr := strings.Join(*fieldNames, ", ")
 	rows, err := connector.pool.Query(fmt.Sprintf("SELECT %s FROM %s %s ORDER BY id LIMIT %d OFFSET %d",
-		fieldNamesStr, tableName, wherePartVal, limit, offset))
+		fieldNamesStr, tableName, wherePartVal, limit, offset), *wherePartValues...)
 	if err != nil {
 		panic(err.Error())
 	}

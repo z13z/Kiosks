@@ -16,7 +16,7 @@ func TestDBConnector_GetObjectsFromDb(t *testing.T) {
 	}
 	type args struct {
 		entityArg   MockEntity
-		whereClause string
+		whereParams map[string]string
 		offset      int
 		limit       int
 	}
@@ -39,17 +39,17 @@ func TestDBConnector_GetObjectsFromDb(t *testing.T) {
 			args: args{entityArg: MockEntity{}, limit: math.MaxInt32}, want: &[]interface{}{&mockEntitiesToTest[0]}},
 		{name: "multipleRowTableTest", fields: fields{getRowsDbPool(false, 0, math.MaxInt32, "", mockEntitiesToTest...)},
 			args: args{entityArg: MockEntity{}, limit: math.MaxInt32}, want: &mockEntityHoldersToTest},
-		{name: "multipleRowTableWhereClauseTest", fields: fields{getRowsDbPool(true, 0, math.MaxInt32, "WHERE id = 0", mockEntitiesToTest...)},
-			args: args{entityArg: MockEntity{}, limit: math.MaxInt32, whereClause: "WHERE id = 0"}, want: &[]interface{}{&mockEntitiesToTest[0]}},
+		{name: "multipleRowTableWhereClauseTest", fields: fields{getRowsDbPool(true, 0, math.MaxInt32, "WHERE id = \\?", mockEntitiesToTest...)},
+			args: args{entityArg: MockEntity{}, limit: math.MaxInt32, whereParams: map[string]string{"id": "0"}}, want: &[]interface{}{&mockEntitiesToTest[0]}},
 		{name: "multipleRowTableWithOffsetTest", fields: fields{getRowsDbPool(true, 1, 1, "", mockEntitiesToTest...)},
-			args: args{entityArg: MockEntity{}, whereClause: "", offset: 1, limit: 1}, want: &[]interface{}{&mockEntitiesToTest[0]}},
+			args: args{entityArg: MockEntity{}, whereParams: map[string]string{}, offset: 1, limit: 1}, want: &[]interface{}{&mockEntitiesToTest[0]}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			connector := &DBConnector{
 				pool: tt.fields.pool,
 			}
-			if got := connector.GetObjectsFromDb(&tt.args.entityArg, &tt.args.whereClause, tt.args.offset, tt.args.limit); len(*tt.want) != len(*got) || len(*got) != 0 && !reflect.DeepEqual(got, tt.want) {
+			if got := connector.GetObjectsFromDb(&tt.args.entityArg, &tt.args.whereParams, tt.args.offset, tt.args.limit); len(*tt.want) != len(*got) || len(*got) != 0 && !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetObjectsFromDb() = %v, want %v", got, tt.want)
 			}
 		})
