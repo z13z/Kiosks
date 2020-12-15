@@ -5,9 +5,9 @@ function searchPanel(props) {
     return (
         <div className="SearchPanelDiv">
 
-            {props.children.map((field, ) => {
+            {props.children.map((field,) => {
                 return (
-                    <div className="SearchPanelComponent">
+                    <div className="SearchPanelComponent" key={field.key}>
                         {field}
                     </div>
                 )

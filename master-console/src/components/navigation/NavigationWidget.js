@@ -12,7 +12,7 @@ function navigationWidget() {
             <ul className="NavigationList">
                 {links.map((link) => {
                     return (
-                        <Link to={link.address}>
+                        <Link key={link.name} to={link.address}>
                             <li>{link.name}</li>
                         </Link>
                     );
