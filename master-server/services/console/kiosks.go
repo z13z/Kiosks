@@ -38,9 +38,9 @@ func (KiosksServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func getKiosksList(w *http.ResponseWriter, r *http.Request) {
 	var found bool
 	kioskId, _ := getIntFromQuery(r.URL.Query()["id"])
-	kioskNameParam := r.URL.Query()["id"]
+	kioskNameParam := r.URL.Query()["name"]
 	var kioskName string
-	if kioskNameParam != nil && len(kioskNameParam) > 1 {
+	if kioskNameParam != nil && len(kioskNameParam) > 0 {
 		kioskName = kioskNameParam[0]
 	} else {
 		kioskName = ""

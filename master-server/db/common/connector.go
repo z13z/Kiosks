@@ -48,12 +48,12 @@ func parseWherePartAndParamValues(params *map[string]string) (*string, *[]interf
 	var whereQueryValues []interface{}
 	paramNumber := 1
 	for column, value := range *params {
-		whereQuery += column + fmt.Sprintf(" = $%d, ", paramNumber)
+		whereQuery += column + fmt.Sprintf(" = $%d AND ", paramNumber)
 		paramNumber++
 		whereQueryValues = append(whereQueryValues, value)
 	}
-	//remove last ', ' part
-	whereQuery = whereQuery[:len(whereQuery)-2]
+	//remove last ' AND ' part
+	whereQuery = whereQuery[:len(whereQuery)-5]
 	return &whereQuery, &whereQueryValues
 }
 
