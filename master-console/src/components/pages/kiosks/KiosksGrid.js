@@ -28,7 +28,8 @@ class kiosksGrid extends Component {
     render() {
         return <div className="KiosksGridDiv">
             <ul>
-                {this.state.kiosks.map(kiosk => <li key={kiosk.id}>{kiosk.name}</li>)}
+                {this.state.kiosks != null ? this.state.kiosks.map(kiosk => <li
+                    key={kiosk.id}>{kiosk.name}</li>) : null}
             </ul>
         </div>
     }
