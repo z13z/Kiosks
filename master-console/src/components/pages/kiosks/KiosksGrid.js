@@ -11,12 +11,18 @@ class kiosksGrid extends Component {
         this.loadKiosks()
     }
 
+    stateDidChange(props, state) {
+        return JSON.stringify(this.state) !== JSON.stringify(state) || JSON.stringify(this.props) !== JSON.stringify(props)
+    }
+
     shouldComponentUpdate(nextProps, nextState, nextContext) {
-        return Object.is(this.state, nextState)
+        return this.stateDidChange(nextProps, nextState)
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        this.loadKiosks()
+        if (this.stateDidChange(prevProps, prevState)) {
+            this.loadKiosks();
+        }
     }
 
     render() {
@@ -36,7 +42,6 @@ class kiosksGrid extends Component {
             queryParams.params.name = this.props.kioskName
         }
         axios.get("/kiosk", queryParams).then(response => {
-            console.log(response.data)
             this.setState({
                 kiosks: response.data
             })
