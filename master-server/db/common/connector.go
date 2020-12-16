@@ -46,8 +46,10 @@ func parseWherePartAndParamValues(params *map[string]string) (*string, *[]interf
 	}
 	whereQuery := "WHERE "
 	var whereQueryValues []interface{}
+	paramNumber := 1
 	for column, value := range *params {
-		whereQuery += column + " = ?, "
+		whereQuery += column + fmt.Sprintf(" = $%d, ", paramNumber)
+		paramNumber++
 		whereQueryValues = append(whereQueryValues, value)
 	}
 	//remove last ', ' part

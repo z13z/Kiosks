@@ -39,7 +39,7 @@ func TestDBConnector_GetObjectsFromDb(t *testing.T) {
 			args: args{entityArg: MockEntity{}, limit: math.MaxInt32}, want: &[]interface{}{&mockEntitiesToTest[0]}},
 		{name: "multipleRowTableTest", fields: fields{getRowsDbPool(false, 0, math.MaxInt32, "", mockEntitiesToTest...)},
 			args: args{entityArg: MockEntity{}, limit: math.MaxInt32}, want: &mockEntityHoldersToTest},
-		{name: "multipleRowTableWhereClauseTest", fields: fields{getRowsDbPool(true, 0, math.MaxInt32, "WHERE id = \\?", mockEntitiesToTest...)},
+		{name: "multipleRowTableWhereClauseTest", fields: fields{getRowsDbPool(true, 0, math.MaxInt32, "WHERE id = \\$1", mockEntitiesToTest...)},
 			args: args{entityArg: MockEntity{}, limit: math.MaxInt32, whereParams: map[string]string{"id": "0"}}, want: &[]interface{}{&mockEntitiesToTest[0]}},
 		{name: "multipleRowTableWithOffsetTest", fields: fields{getRowsDbPool(true, 1, 1, "", mockEntitiesToTest...)},
 			args: args{entityArg: MockEntity{}, whereParams: map[string]string{}, offset: 1, limit: 1}, want: &[]interface{}{&mockEntitiesToTest[0]}},
