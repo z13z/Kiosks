@@ -1,14 +1,14 @@
 import React, {Component} from 'react'
-import './KiosksPage.css'
+import './ImagesPage.css'
 import axios from "axios"
 
-class KiosksGrid extends Component {
+class ImagesGrid extends Component {
     state = {
-        kiosks: []
+        images: []
     }
 
     componentDidMount() {
-        this.loadKiosks()
+        this.loadImages()
     }
 
     stateDidChange(props, state) {
@@ -21,33 +21,33 @@ class KiosksGrid extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.stateDidChange(prevProps, prevState)) {
-            this.loadKiosks();
+            this.loadImages();
         }
     }
 
     render() {
-        return <div className="KiosksGridDiv">
+        return <div className="ImagesGridDiv">
             <ul>
-                {this.state.kiosks != null ? this.state.kiosks.map(kiosk => <li
-                    key={kiosk.id}>{kiosk.name}</li>) : null}
+                {this.state.images != null ? this.state.images.map(image => <li
+                    key={image.id}>{image.name}</li>) : null}
             </ul>
         </div>
     }
 
-    loadKiosks() {
+    loadImages() {
         let queryParams = {params: {}}
-        if (this.props.kioskId != null && this.props.kioskId !== "") {
-            queryParams.params.id = this.props.kioskId
+        if (this.props.imageId != null && this.props.imageId !== "") {
+            queryParams.params.id = this.props.imageId
         }
-        if (this.props.kioskName != null && this.props.kioskName !== "") {
-            queryParams.params.name = this.props.kioskName
+        if (this.props.imageName != null && this.props.imageName !== "") {
+            queryParams.params.name = this.props.imageName
         }
-        axios.get("/kiosk", queryParams).then(response => {
+        axios.get("/image", queryParams).then(response => {
             this.setState({
-                kiosks: response.data
+                image: response.data
             })
         })
     }
 }
 
-export default KiosksGrid
+export default ImagesGrid
