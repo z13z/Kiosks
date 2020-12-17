@@ -5,6 +5,7 @@ sudo apt install -y libegl1-mesa libegl1 && \
 sudo apt install -y xwayland && \
 sudo apt install -y xdotool && \
 sudo apt install -y mingetty && \
+sudo apt install -y firefox && \
 sudo mkdir /etc/systemd/system/getty@tty1.service.d && \
 sudo useradd -m -G sudo --shell /bin/bash kiosk && \
 sudo passwd kiosk<<EOF
