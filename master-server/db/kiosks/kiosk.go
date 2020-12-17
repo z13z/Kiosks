@@ -13,8 +13,8 @@ type KioskEntity struct {
 }
 
 func (kiosk *KioskEntity) SetEntityFields(fields map[string]interface{}) {
-	idValue := fields["Id"]
-	nameValue := fields["Name"]
+	idValue := fields["id"]
+	nameValue := fields["name"]
 	kioskImageIdValue := fields["kiosk_image_id"]
 	createTime := fields["create_time"]
 	kiosk.Id = *idValue.(*int64)
@@ -23,18 +23,18 @@ func (kiosk *KioskEntity) SetEntityFields(fields map[string]interface{}) {
 	kiosk.CreateTime = *createTime.(*time.Time)
 }
 
-func (kiosk *KioskEntity) GetTableName() string {
+func (*KioskEntity) GetTableName() string {
 	return "Kiosk"
 }
 
-func (kiosk *KioskEntity) GetFieldNames() *[]string {
-	return &[]string{"Id", "Name", "kiosk_image_id", "create_time"}
+func (*KioskEntity) GetFieldNames() *[]string {
+	return &[]string{"id", "name", "kiosk_image_id", "create_time"}
 }
 
 func (kiosk *KioskEntity) GetFieldValueHolders() *[]interface{} {
 	return &([]interface{}{&kiosk.Id, &kiosk.Name, &kiosk.KioskImageId, &kiosk.CreateTime})
 }
 
-func (kiosk *KioskEntity) NewEntity() common.IEntity {
+func (*KioskEntity) NewEntity() common.IEntity {
 	return new(KioskEntity)
 }

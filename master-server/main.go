@@ -7,7 +7,7 @@ import (
 )
 
 //todo zaza move to configuration
-const kiosksServiceAddress = ":8080"
+const serviceAddress = ":8080"
 
 func main() {
 	startServices()
@@ -15,5 +15,6 @@ func main() {
 
 func startServices() {
 	http.Handle("/kiosk", console.KiosksServiceHandler{})
-	log.Fatal(http.ListenAndServe(kiosksServiceAddress, nil))
+	http.Handle("/image", console.ImageServiceHandler{})
+	log.Fatal(http.ListenAndServe(serviceAddress, nil))
 }
