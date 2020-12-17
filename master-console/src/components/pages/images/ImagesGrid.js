@@ -44,7 +44,7 @@ class ImagesGrid extends Component {
         }
         axios.get("/image", queryParams).then(response => {
             this.setState({
-                image: response.data
+                images: response.data
             })
         })
     }
