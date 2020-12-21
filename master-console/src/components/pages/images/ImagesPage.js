@@ -39,7 +39,7 @@ const ImagesPage = () => {
                 </label>
                 <button key="imageSearchButton" onClick={updateState}>search</button>
             </SearchPanel>
-            <ImagesGrid imageId={currentState.imageId} imageName={currentState.imageName}/>
+            <ImagesGrid id={currentState.imageId} name={currentState.imageName}/>
         </RightPanel>
 
     )

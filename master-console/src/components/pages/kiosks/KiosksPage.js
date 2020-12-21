@@ -39,7 +39,7 @@ const KiosksPage = () => {
                 </label>
                 <button key="kioskSearchButton" onClick={updateState}>search</button>
             </SearchPanel>
-            <KiosksGrid kioskId={currentState.kioskId} kioskName={currentState.kioskName}/>
+            <KiosksGrid id={currentState.kioskId} name={currentState.kioskName}/>
         </RightPanel>
 
     )
