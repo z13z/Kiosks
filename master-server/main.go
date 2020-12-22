@@ -16,5 +16,7 @@ func main() {
 func startServices() {
 	http.Handle("/kiosk", console.KiosksServiceHandler{})
 	http.Handle("/image", console.ImageServiceHandler{})
+	http.Handle("/defaultScript", console.DefaultImageScriptServiceHandler{})
+
 	log.Fatal(http.ListenAndServe(serviceAddress, nil))
 }

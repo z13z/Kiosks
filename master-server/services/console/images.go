@@ -2,14 +2,32 @@ package console
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/z13z/Kiosks/master-server/db/images"
+	"log"
 	"math"
 	"net/http"
 )
 
 type ImageServiceHandler struct{}
 
+type DefaultImageScriptServiceHandler struct{}
+
 var imagesBean = images.NewBean()
+
+func (DefaultImageScriptServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	if r.Method == "GET" {
+		response, err := prepare_kioskBytes()
+		if err != nil {
+			writeServerErrorResponse(&w, err)
+		} else {
+			writeBytesInResponse(&w, &response)
+		}
+	} else {
+		writeWrongHttpMethodResponse(&w, r.Method)
+	}
+}
 
 func (ImageServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -26,11 +44,23 @@ func (ImageServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		//todo implement
 		//deleteImage()
 	default:
-		w.WriteHeader(http.StatusNotFound)
-		errorMessage := "{\"message\": \"not found\"}"
-		mustWrite := []byte(errorMessage)
-		writeBytesInResponse(&w, &mustWrite)
+		writeWrongHttpMethodResponse(&w, r.Method)
 	}
+}
+
+func writeWrongHttpMethodResponse(w *http.ResponseWriter, method string) {
+	(*w).WriteHeader(http.StatusNotFound)
+	errorMessage := fmt.Sprintf("{\"message\": \"unsupported http method [%s]\"}", method)
+	mustWrite := []byte(errorMessage)
+	writeBytesInResponse(w, &mustWrite)
+}
+
+func writeServerErrorResponse(w *http.ResponseWriter, err error) {
+	(*w).WriteHeader(http.StatusInternalServerError)
+	errorMessage := "{\"message\": \"internal server error\"}"
+	mustWrite := []byte(errorMessage)
+	writeBytesInResponse(w, &mustWrite)
+	log.Fatal(err)
 }
 
 func getImagesList(w *http.ResponseWriter, r *http.Request) {
