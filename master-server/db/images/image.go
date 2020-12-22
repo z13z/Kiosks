@@ -9,15 +9,21 @@ type ImageEntity struct {
 	Id         int64     `json:"id"`
 	Name       string    `json:"name"`
 	CreateTime time.Time `json:"createTime"`
+	Script     string    `json:"script"`
+	State      string    `sql:"type:KioskImageState" json:"state"`
 }
 
 func (image *ImageEntity) SetEntityFields(fields map[string]interface{}) {
 	idValue := fields["id"]
 	nameValue := fields["name"]
 	createTime := fields["create_time"]
+	state := fields["state"]
+	script := fields["script"]
 	image.Id = *idValue.(*int64)
 	image.Name = *nameValue.(*string)
 	image.CreateTime = *createTime.(*time.Time)
+	image.State = *state.(*string)
+	image.Script = *script.(*string)
 }
 
 func (image *ImageEntity) GetTableName() string {
@@ -25,11 +31,11 @@ func (image *ImageEntity) GetTableName() string {
 }
 
 func (image *ImageEntity) GetFieldNames() *[]string {
-	return &[]string{"id", "name", "create_time"}
+	return &[]string{"id", "name", "create_time", "state", "script"}
 }
 
 func (image *ImageEntity) GetFieldValueHolders() *[]interface{} {
-	return &([]interface{}{&image.Id, &image.Name, &image.CreateTime})
+	return &([]interface{}{&image.Id, &image.Name, &image.CreateTime, &image.State, &image.Script})
 }
 
 func (image *ImageEntity) NewEntity() common.IEntity {
