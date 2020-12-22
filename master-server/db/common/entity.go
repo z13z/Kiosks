@@ -6,4 +6,7 @@ type IEntity interface {
 	GetTableName() string
 	GetFieldNames() *[]string
 	NewEntity() IEntity
+	GetEditableFieldValueHolders() *[]interface{}
+	GetEditableFieldNames() *[]string
+	GetId() int64
 }

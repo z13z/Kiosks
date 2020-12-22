@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
+	"strconv"
 	"strings"
 )
 
@@ -89,6 +90,27 @@ func (connector *DBConnector) selectRowsFromDb(tableName string, fieldNames *[]s
 		resultObjectsArray = append(resultObjectsArray, rowObject)
 	}
 	return &resultObjectsArray
+}
+
+//todo[z13z] create test for this method
+func (connector *DBConnector) UpdateObjectInDb(entity IEntity) int64 {
+	fieldsAssignmentStr := ""
+	for ind, fieldName := range *(entity).GetEditableFieldNames() {
+		fieldsAssignmentStr += fieldName + " = $" + strconv.Itoa(ind+2)
+	}
+
+	fieldValueHolders := []interface{}{(entity).GetId()}
+	fieldValueHolders = append(fieldValueHolders, *(entity).GetEditableFieldValueHolders()...)
+	result, err := connector.pool.Exec(fmt.Sprintf("UPDATE %s SET %s WHERE id = $1", (entity).GetTableName(),
+		fieldsAssignmentStr), fieldValueHolders...)
+	if err != nil {
+		panic(err)
+	}
+	updatedCount, err := result.RowsAffected()
+	if err != nil {
+		panic(err)
+	}
+	return updatedCount
 }
 
 func getFieldNamesAndValuesMap(names *[]string, holders *[]interface{}) map[string]interface{} {

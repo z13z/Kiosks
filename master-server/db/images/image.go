@@ -41,3 +41,15 @@ func (image *ImageEntity) GetFieldValueHolders() *[]interface{} {
 func (image *ImageEntity) NewEntity() common.IEntity {
 	return new(ImageEntity)
 }
+
+func (image *ImageEntity) GetEditableFieldNames() *[]string {
+	return &[]string{"name", "create_time", "state", "script"}
+}
+
+func (image *ImageEntity) GetEditableFieldValueHolders() *[]interface{} {
+	return &([]interface{}{&image.Id, &image.Name, &image.CreateTime, &image.State, &image.Script})
+}
+
+func (image *ImageEntity) GetId() int64 {
+	return image.Id
+}

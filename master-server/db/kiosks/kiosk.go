@@ -38,3 +38,15 @@ func (kiosk *KioskEntity) GetFieldValueHolders() *[]interface{} {
 func (*KioskEntity) NewEntity() common.IEntity {
 	return new(KioskEntity)
 }
+
+func (kiosk *KioskEntity) GetEditableFieldValueHolders() *[]interface{} {
+	return &([]interface{}{&kiosk.Id, &kiosk.Name, &kiosk.KioskImageId, &kiosk.CreateTime})
+}
+
+func (kiosk *KioskEntity) GetEditableFieldNames() *[]string {
+	return &[]string{"name", "kiosk_image_id", "create_time"}
+}
+
+func (kiosk *KioskEntity) GetId() int64 {
+	return kiosk.Id
+}

@@ -1,6 +1,7 @@
 package images
 
 import (
+	"fmt"
 	"github.com/z13z/Kiosks/master-server/db/common"
 	"strconv"
 )
@@ -35,6 +36,14 @@ func (bean *Bean) GetImage(id int) *ImageEntity {
 	resultFromDb := bean.GetImages(id, "", 0, 1)
 	if len(*resultFromDb) == 1 {
 		return &((*resultFromDb)[0])
+	}
+	return nil
+}
+
+func (bean *Bean) EditImage(entity *ImageEntity) error {
+	updated := bean.connector.UpdateObjectInDb(entity)
+	if updated != 1 {
+		return fmt.Errorf("image with id [%d] doesn't exist in database", entity.Id)
 	}
 	return nil
 }

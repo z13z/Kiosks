@@ -1,6 +1,7 @@
 package console
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/z13z/Kiosks/master-server/db/images"
@@ -35,8 +36,7 @@ func (ImageServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		getImagesList(&w, r)
 	case "POST":
-		//todo implement
-		//editImage(w, r)
+		editImage(&w, r)
 	case "PUT":
 		//todo implement
 		//addImage(w, r)
@@ -46,6 +46,34 @@ func (ImageServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	default:
 		writeWrongHttpMethodResponse(&w, r.Method)
 	}
+}
+
+func editImage(w *http.ResponseWriter, r *http.Request) {
+	buffer := new(bytes.Buffer)
+	_, err := buffer.ReadFrom(r.Body)
+	readBytes := buffer.Bytes()
+	if err != nil {
+		writeServerErrorResponse(w, err)
+		return
+	}
+	entity := images.ImageEntity{}
+	err = json.Unmarshal(readBytes, &entity)
+	if err != nil {
+		writeBadRequestError(w, fmt.Sprintf("Can't unmarshal Image from json [%s]", string(readBytes)))
+	}
+	err = imagesBean.EditImage(&entity)
+	if err != nil {
+		writeBadRequestError(w, string(readBytes))
+	} else {
+		(*w).WriteHeader(http.StatusAccepted)
+	}
+}
+
+func writeBadRequestError(w *http.ResponseWriter, requestBody string) {
+	(*w).WriteHeader(http.StatusBadRequest)
+	errorMessage := fmt.Sprintf("{\"message\": \"bad request [%s]\"}", requestBody)
+	mustWrite := []byte(errorMessage)
+	writeBytesInResponse(w, &mustWrite)
 }
 
 func writeWrongHttpMethodResponse(w *http.ResponseWriter, method string) {
@@ -60,7 +88,7 @@ func writeServerErrorResponse(w *http.ResponseWriter, err error) {
 	errorMessage := "{\"message\": \"internal server error\"}"
 	mustWrite := []byte(errorMessage)
 	writeBytesInResponse(w, &mustWrite)
-	log.Fatal(err)
+	log.Print(err)
 }
 
 func getImagesList(w *http.ResponseWriter, r *http.Request) {
