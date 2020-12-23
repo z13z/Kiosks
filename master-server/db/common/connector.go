@@ -92,7 +92,6 @@ func (connector *DBConnector) selectRowsFromDb(tableName string, fieldNames *[]s
 	return &resultObjectsArray
 }
 
-//todo[z13z] create test for this method
 func (connector *DBConnector) UpdateObjectInDb(entity IEntity) int64 {
 	fieldsAssignmentStr := ""
 	for ind, fieldName := range *(entity).GetEditableFieldNames() {
