@@ -48,15 +48,18 @@ class Grid extends Component {
                         </tbody>
                     </table>
                 </div>
-                <GridPagination currentPage={1} pagesCount={2} changePage={this.changePage.bind(this)}/>
+                <GridPagination currentPage={this.state.currentPage} pagesCount={this.state.pagesCount}
+                                changePage={this.changePage.bind(this)}/>
             </div>
         )
     }
 
     changePage(page) {
-        this.setState({
-            currentPage: page,
-        })
+        if (page > 0 && page <= this.state.pagesCount) {
+            this.setState({
+                currentPage: page
+            });
+        }
     }
 
     //abstract methods
@@ -70,14 +73,13 @@ class Grid extends Component {
         this.getSearchProps().forEach(prop => {
             queryParams[prop] = this.props[prop]
         })
-        queryParams['offset'] = this.state.currentPage * ROWS_COUNT_ON_PAGE
+        queryParams['offset'] = (this.state.currentPage - 1) * ROWS_COUNT_ON_PAGE
         queryParams['limit'] = ROWS_COUNT_ON_PAGE
-
         // noinspection JSCheckFunctionSignatures
-        axios.get(this.getQueryUrl(), queryParams).then(response => {
+        axios.get(this.getQueryUrl(), {params: queryParams}).then(response => {
             this.setState({
                 data: response.data.rows,
-                pagesCount: Math.ceil(response.data.limit / ROWS_COUNT_ON_PAGE)
+                pagesCount: Math.ceil(response.data.rowsCount / ROWS_COUNT_ON_PAGE)
             })
         })
     }
