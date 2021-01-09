@@ -41,6 +41,11 @@ func (connector *DBConnector) GetObjectsFromDb(entity IEntity, whereParams *map[
 		entity.NewEntity, wherePart, wherePartValues, offset, limit)
 }
 
+func (connector *DBConnector) GetObjectsCountFromDb(entity IEntity, whereParams *map[string]string) int {
+	wherePart, wherePartValues := parseWherePartAndParamValues(whereParams)
+	return connector.getRowsCountFromDb(entity.GetTableName(), wherePart, wherePartValues)
+}
+
 func parseWherePartAndParamValues(params *map[string]string) (*string, *[]interface{}) {
 	if params == nil || len(*params) == 0 {
 		return nil, &[]interface{}{}
@@ -110,6 +115,36 @@ func (connector *DBConnector) UpdateObjectInDb(entity IEntity) int64 {
 		panic(err)
 	}
 	return updatedCount
+}
+
+func (connector *DBConnector) getRowsCountFromDb(tableName string, wherePart *string, wherePartValues *[]interface{}) int {
+	var wherePartVal string
+	if wherePart == nil {
+		wherePartVal = ""
+	} else {
+		wherePartVal = *wherePart
+	}
+	rows, err := connector.pool.Query(fmt.Sprintf("SELECT COUNT(1) FROM %s %s",
+		tableName, wherePartVal), *wherePartValues...)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer func() {
+		err = rows.Close()
+		if err != nil {
+			panic(err.Error())
+		}
+	}()
+
+	rowsCount := 0
+	if rows.Next() {
+		err = rows.Scan(&rowsCount)
+		if err != nil {
+			panic(err)
+		}
+	}
+	return rowsCount
+
 }
 
 func getFieldNamesAndValuesMap(names *[]string, holders *[]interface{}) map[string]interface{} {

@@ -32,6 +32,17 @@ func (bean *Bean) GetImages(id int, name string, offset, limit int) *[]ImageEnti
 	return &resultImages
 }
 
+func (bean *Bean) GetImagesCount(id int, name string) int {
+	queryParams := make(map[string]string)
+	if id != 0 {
+		queryParams["id"] = strconv.Itoa(id)
+	}
+	if name != "" {
+		queryParams["name"] = name
+	}
+	return bean.connector.GetObjectsCountFromDb(&ImageEntity{}, &queryParams)
+}
+
 func (bean *Bean) GetImage(id int) *ImageEntity {
 	resultFromDb := bean.GetImages(id, "", 0, 1)
 	if len(*resultFromDb) == 1 {

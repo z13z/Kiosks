@@ -31,6 +31,17 @@ func (bean *Bean) GetKiosks(id int, name string, offset, limit int) *[]KioskEnti
 	return &resultKiosks
 }
 
+func (bean *Bean) GetKiosksCount(id int, name string) int {
+	queryParams := make(map[string]string)
+	if id != 0 {
+		queryParams["id"] = strconv.Itoa(id)
+	}
+	if name != "" {
+		queryParams["name"] = name
+	}
+	return bean.connector.GetObjectsCountFromDb(&KioskEntity{}, &queryParams)
+}
+
 func (bean *Bean) GetKiosk(id int) *KioskEntity {
 	resultFromDb := bean.GetKiosks(id, "", 0, 1)
 	if len(*resultFromDb) == 1 {

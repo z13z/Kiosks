@@ -115,10 +115,17 @@ func getImagesList(w *http.ResponseWriter, r *http.Request) {
 	if oneImage {
 		mustWrite, err = json.Marshal(*imagesBean.GetImage(imageId))
 	} else {
-		mustWrite, err = json.Marshal(*imagesBean.GetImages(imageId, imageName, offset, limit))
+		response := imagesListResponse{Rows: *imagesBean.GetImages(imageId, imageName, offset, limit),
+			RowsCount: imagesBean.GetImagesCount(imageId, imageName)}
+		mustWrite, err = json.Marshal(response)
 	}
 	if err != nil {
 		panic(err.Error())
 	}
 	writeBytesInResponse(w, &mustWrite)
+}
+
+type imagesListResponse struct {
+	Rows      []images.ImageEntity `json:"rows"`
+	RowsCount int                  `json:"rowsCount"`
 }

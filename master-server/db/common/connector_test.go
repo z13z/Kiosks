@@ -86,13 +86,56 @@ func TestDBConnector_UpdateObjectInDb(t *testing.T) {
 	}
 }
 
+func TestDBConnector_GetObjectsCountFromDb(t *testing.T) {
+	type fields struct {
+		pool *sql.DB
+	}
+	type args struct {
+		entity      IEntity
+		whereParams *map[string]string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   int
+	}{
+		{name: "emptyTableRowsCountTest", fields: fields{getRowsCountDbPool(0, "")},
+			args: args{entity: &MockEntity{}}, want: 0},
+		{name: "oneRowTableRowsCountTest", fields: fields{getRowsCountDbPool(1, "WHERE id = \\$1")},
+			args: args{entity: &MockEntity{}, whereParams: &map[string]string{"id": "0"}}, want: 1},
+		{name: "multipleRowsTableRowsCountTest", fields: fields{getRowsCountDbPool(21, "WHERE id = \\$1 AND name = \\$2")},
+			args: args{entity: &MockEntity{}, whereParams: &map[string]string{"id": "2", "name": "z13"}}, want: 21},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			connector := &DBConnector{
+				pool: tt.fields.pool,
+			}
+			if got := connector.GetObjectsCountFromDb(tt.args.entity, tt.args.whereParams); got != tt.want {
+				t.Errorf("GetObjectsCountFromDb() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func getRowsCountDbPool(count int, wherePart string) *sql.DB {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		panic("problem with db mocking")
+	}
+	rows := sqlmock.NewRows([]string{"count"})
+	rows.AddRow(driver.Value(count))
+	mock.ExpectQuery("SELECT COUNT\\(1\\) FROM Mock " + wherePart).WillReturnRows(rows)
+	return db
+}
+
 func getSelectRowsDbPool(onlyFirstEntry bool, offset, limit int, wherePart string, entities ...MockEntity) *sql.DB {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		panic("problem with db mocking")
 	}
-	var rows *sqlmock.Rows
-	rows = sqlmock.NewRows([]string{"id", "name"})
+	rows := sqlmock.NewRows([]string{"id", "name"})
 	if onlyFirstEntry {
 		if entities != nil && len(entities) > 0 {
 			rows.AddRow(driver.Value(entities[0].id), driver.Value(entities[0].name))

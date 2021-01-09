@@ -45,7 +45,7 @@ func getKiosksList(w *http.ResponseWriter, r *http.Request) {
 	}
 	oneKiosk := getBooleanFromQuery(r.URL.Query()["oneKiosk"])
 	offset, found := getIntFromQuery(r.URL.Query()["offset"])
-	if !found {
+	if !found || offset < 0 {
 		offset = 0
 	}
 	limit, found := getIntFromQuery(r.URL.Query()["limit"])
@@ -57,10 +57,17 @@ func getKiosksList(w *http.ResponseWriter, r *http.Request) {
 	if oneKiosk {
 		mustWrite, err = json.Marshal(*kiosksBean.GetKiosk(kioskId))
 	} else {
-		mustWrite, err = json.Marshal(*kiosksBean.GetKiosks(kioskId, kioskName, offset, limit))
+		response := kiosksListResponse{Rows: *kiosksBean.GetKiosks(kioskId, kioskName, offset, limit),
+			RowsCount: kiosksBean.GetKiosksCount(kioskId, kioskName)}
+		mustWrite, err = json.Marshal(response)
 	}
 	if err != nil {
 		panic(err.Error())
 	}
 	writeBytesInResponse(w, &mustWrite)
+}
+
+type kiosksListResponse struct {
+	Rows      []kiosks.KioskEntity `json:"rows"`
+	RowsCount int                  `json:"rowsCount"`
 }
