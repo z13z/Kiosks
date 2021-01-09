@@ -1,0 +1,24 @@
+.PaginationIcon {
+    width: 24px;
+    height: 24px;
+    opacity: 70%;
+    margin-bottom: -9px;
+}
+
+.PaginationIcon:hover {
+    opacity: 100%;
+}
+
+.PageNumberField::-webkit-outer-spin-button,
+.PageNumberField::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.PageNumberField {
+    width: 20px;
+    -moz-appearance: textfield;
+}
+
+.PaginationPanel {
+    margin-left: 12px;
+}

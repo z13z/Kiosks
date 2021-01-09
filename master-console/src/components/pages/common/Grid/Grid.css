@@ -1,12 +1,19 @@
 .GridTable {
     width: 95%;
     border-collapse: collapse;
-    margin: 12px
+    height: 90%;
+    margin: 22px;
+    border: 1px solid lightgrey;
+}
+
+.GridTableDiv{
+    border: 1px solid lightgrey;
+    margin: 12px;
+    width: 95%;
 }
 
 .GridRow {
     border: 1px solid lightgrey;
-
 }
 
 .GridRow:hover{
@@ -26,4 +33,5 @@
     padding-left: 16px;
     padding-bottom: 7px;
     padding-top: 7px;
+    background-color: forestgreen;
 }
