@@ -1,6 +1,8 @@
 package console
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -34,4 +36,26 @@ func writeBytesInResponse(w *http.ResponseWriter, mustWrite *[]byte) {
 			panic(err)
 		}
 	}
+}
+
+func writeBadRequestError(w *http.ResponseWriter, requestBody string) {
+	(*w).WriteHeader(http.StatusBadRequest)
+	errorMessage := fmt.Sprintf("{\"message\": \"bad request [%s]\"}", requestBody)
+	mustWrite := []byte(errorMessage)
+	writeBytesInResponse(w, &mustWrite)
+}
+
+func writeWrongHttpMethodResponse(w *http.ResponseWriter, method string) {
+	(*w).WriteHeader(http.StatusNotFound)
+	errorMessage := fmt.Sprintf("{\"message\": \"unsupported http method [%s]\"}", method)
+	mustWrite := []byte(errorMessage)
+	writeBytesInResponse(w, &mustWrite)
+}
+
+func writeServerErrorResponse(w *http.ResponseWriter, err error) {
+	(*w).WriteHeader(http.StatusInternalServerError)
+	errorMessage := "{\"message\": \"internal server error\"}"
+	mustWrite := []byte(errorMessage)
+	writeBytesInResponse(w, &mustWrite)
+	log.Print(err)
 }
