@@ -6,7 +6,7 @@ function navigationWidget() {
     let links = [{address: "/", name: "home"}, {address: "/kiosks", name: "kiosks"}, {
         address: "images",
         name: "images"
-    }]
+    }, {address: "users", name: "users"}]
     return (
         <div className="NavigationDiv">
             <ul className="NavigationList">
