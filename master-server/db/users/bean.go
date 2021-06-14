@@ -62,6 +62,9 @@ func (bean *Bean) EditUser(entity *UserEntity) error {
 }
 
 func (bean *Bean) GetUserByUsername(username string) *UserEntity {
+	if username == "" {
+		return nil
+	}
 	resultFromDb := bean.GetUsers(0, username, 0, 1)
 	if len(*resultFromDb) == 1 {
 		return &((*resultFromDb)[0])

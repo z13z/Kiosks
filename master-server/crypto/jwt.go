@@ -10,14 +10,17 @@ import (
 var signatureKey = []byte("changeIt")
 
 type KioskUserClaims struct {
-	Username    string   `json:"username"`
-	Permissions []string `json:"permissions"`
+	Username    string `json:"username"`
+	Permissions string `json:"permissions"`
 	jwt.StandardClaims
 }
 
 func GetJwtForUser(entity users.UserEntity) (string, error) {
-	var permissions []string
-	_ = entity.Permissions.Scan(permissions)
+	val, err := entity.Permissions.Value()
+	if err != nil {
+		return "", err
+	}
+	permissions := val.(string)
 	userClaims := KioskUserClaims{
 		entity.Name,
 		permissions,
