@@ -3,7 +3,7 @@ import './Grid.css'
 import axios from "axios";
 import './Pagination'
 import GridPagination from "./Pagination";
-import {CURRENT_USER_KEY} from '../../../../Constants'
+import {JWT_TOKEN_KEY} from '../../../../Constants'
 
 const ROWS_COUNT_ON_PAGE = 10
 
@@ -70,7 +70,7 @@ class Grid extends Component {
     }
 
     loadData() {
-        const axiosHeader = {Authorization: localStorage.getItem(CURRENT_USER_KEY)}
+        const axiosHeader = {Authorization: localStorage.getItem(JWT_TOKEN_KEY)}
         let queryParams = {params: {}}
         this.getSearchProps().forEach(prop => {
             queryParams[prop] = this.props[prop]

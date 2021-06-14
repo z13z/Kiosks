@@ -1,7 +1,7 @@
 import React from 'react'
 import './LoginPage.css'
 import axios from "axios"
-import {CURRENT_USER_KEY} from "../../../Constants"
+import {JWT_TOKEN_KEY, USER_PERMISSIONS_KEY, USERNAME_KEY} from "../../../Constants"
 
 const LOGIN_PAGE_PATH = '/login'
 
@@ -15,7 +15,11 @@ const LoginPage = () => {
         userData.password = event.target.value
     }
     const loginUserAction = (response) => {
-        localStorage.setItem(CURRENT_USER_KEY, response.data)
+        console.log(JSON.stringify(response))
+        localStorage.setItem(JWT_TOKEN_KEY, response.data.jwt)
+        const jwtBody = JSON.parse(atob(response.data.jwt.split(".")[1]))
+        localStorage.setItem(USERNAME_KEY, jwtBody.username)
+        localStorage.setItem(USER_PERMISSIONS_KEY, jwtBody.permissions.replaceAll('\"', "").slice(1, -1))
     }
     const loginErrorAction = (error) => {
         console.log(error)

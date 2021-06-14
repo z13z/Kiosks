@@ -1,1 +1,3 @@
-export const CURRENT_USER_KEY = 'currentUser'
+export const JWT_TOKEN_KEY = 'jwtToken'
+export const USERNAME_KEY = 'currentUser'
+export const USER_PERMISSIONS_KEY = 'userPermissions'

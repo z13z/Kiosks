@@ -7,13 +7,13 @@ import ImagesPage from "./components/pages/images/ImagesPage";
 import UsersPage from "./components/pages/users/UsersPage";
 import StatisticsPage from "./components/pages/statistics/StatisticsPage";
 import LoginPage from "./components/pages/login/LoginPage";
-import {CURRENT_USER_KEY} from './Constants'
+import {JWT_TOKEN_KEY} from './Constants'
 
 
 class App extends Component {
 
     render() {
-        if (localStorage.getItem(CURRENT_USER_KEY)) {
+        if (localStorage.getItem(JWT_TOKEN_KEY)) {
             return (
                 <BrowserRouter>
                     <div style={{display: "flex"}}>
