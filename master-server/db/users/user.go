@@ -9,19 +9,23 @@ import (
 type UserEntity struct {
 	Id          int64          `json:"id"`
 	Name        string         `json:"name"`
-	CreateTime  time.Time      `json:"createTime"`
+	UpdateTime  time.Time      `json:"updateTime"`
 	Permissions pq.StringArray `sql:"type:KioskUserPermission ARRAY" json:"permissions"`
+	Password    string         `json:"-"`
+	LoggedIn    time.Time      `sql:"-" json:"loggedInTime"`
 }
 
 func (user *UserEntity) SetEntityFields(fields map[string]interface{}) {
 	idValue := fields["id"]
 	nameValue := fields["name"]
-	createTime := fields["create_time"]
+	updateTime := fields["update_time"]
 	permissions := fields["permissions"]
+	password := fields["password"]
 	user.Id = *idValue.(*int64)
 	user.Name = *nameValue.(*string)
-	user.CreateTime = *createTime.(*time.Time)
+	user.UpdateTime = *updateTime.(*time.Time)
 	user.Permissions = *(permissions.(*pq.StringArray))
+	user.Password = *password.(*string)
 }
 
 func (user *UserEntity) GetTableName() string {
@@ -29,11 +33,11 @@ func (user *UserEntity) GetTableName() string {
 }
 
 func (user *UserEntity) GetFieldNames() *[]string {
-	return &[]string{"id", "name", "create_time", "permissions"}
+	return &[]string{"id", "name", "update_time", "permissions", "password"}
 }
 
 func (user *UserEntity) GetFieldValueHolders() *[]interface{} {
-	return &([]interface{}{&user.Id, &user.Name, &user.CreateTime, &user.Permissions})
+	return &([]interface{}{&user.Id, &user.Name, &user.UpdateTime, &user.Permissions, &user.Password})
 }
 
 func (user *UserEntity) NewEntity() common.IEntity {
@@ -41,11 +45,11 @@ func (user *UserEntity) NewEntity() common.IEntity {
 }
 
 func (user *UserEntity) GetEditableFieldNames() *[]string {
-	return &[]string{"name", "create_time", "permissions"}
+	return &[]string{"name", "update_time", "permissions", "password"}
 }
 
 func (user *UserEntity) GetEditableFieldValueHolders() *[]interface{} {
-	return &([]interface{}{&user.Id, &user.Name, &user.CreateTime, &user.Permissions})
+	return &([]interface{}{&user.Id, &user.Name, &user.UpdateTime, &user.Permissions, &user.Password})
 }
 
 func (user *UserEntity) GetId() int64 {

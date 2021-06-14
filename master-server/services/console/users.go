@@ -11,23 +11,7 @@ import (
 
 type UserServiceHandler struct{}
 
-type DefaultUserScriptServiceHandler struct{}
-
 var usersBean = users.NewBean()
-
-func (DefaultUserScriptServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	if r.Method == "GET" {
-		response, err := prepare_kioskBytes()
-		if err != nil {
-			writeServerErrorResponse(&w, err)
-		} else {
-			writeBytesInResponse(&w, &response)
-		}
-	} else {
-		writeWrongHttpMethodResponse(&w, r.Method)
-	}
-}
 
 func (UserServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")

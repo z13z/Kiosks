@@ -1,6 +1,7 @@
 package users
 
 import (
+	"crypto/sha256"
 	"fmt"
 	"github.com/z13z/Kiosks/master-server/db/common"
 	"strconv"
@@ -52,9 +53,22 @@ func (bean *Bean) GetUser(id int) *UserEntity {
 }
 
 func (bean *Bean) EditUser(entity *UserEntity) error {
+	entity.Password = bean.GetPassword(entity.Password)
 	updated := bean.connector.UpdateObjectInDb(entity)
 	if updated != 1 {
 		return fmt.Errorf("user with id [%d] doesn't exist in database", entity.Id)
 	}
 	return nil
+}
+
+func (bean *Bean) GetUserByUsername(username string) *UserEntity {
+	resultFromDb := bean.GetUsers(0, username, 0, 1)
+	if len(*resultFromDb) == 1 {
+		return &((*resultFromDb)[0])
+	}
+	return nil
+}
+
+func (bean *Bean) GetPassword(password string) string {
+	return fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
 }

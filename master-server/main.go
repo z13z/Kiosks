@@ -18,6 +18,7 @@ func startServices() {
 	http.Handle("/image", console.ImageServiceHandler{})
 	http.Handle("/users", console.UserServiceHandler{})
 	http.Handle("/defaultScript", console.DefaultImageScriptServiceHandler{})
+	http.Handle("/login", console.LoginServiceHandler{})
 
 	log.Fatal(http.ListenAndServe(serviceAddress, nil))
 }

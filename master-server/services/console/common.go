@@ -38,6 +38,12 @@ func writeBytesInResponse(w *http.ResponseWriter, mustWrite *[]byte) {
 	}
 }
 
+func writeJsonInResponse(w *http.ResponseWriter, data string) {
+	(*w).WriteHeader(http.StatusOK)
+	mustWrite := []byte(data)
+	writeBytesInResponse(w, &mustWrite)
+}
+
 func writeBadRequestError(w *http.ResponseWriter, requestBody string) {
 	(*w).WriteHeader(http.StatusBadRequest)
 	errorMessage := fmt.Sprintf("{\"message\": \"bad request [%s]\"}", requestBody)
@@ -46,16 +52,22 @@ func writeBadRequestError(w *http.ResponseWriter, requestBody string) {
 }
 
 func writeWrongHttpMethodResponse(w *http.ResponseWriter, method string) {
-	(*w).WriteHeader(http.StatusNotFound)
-	errorMessage := fmt.Sprintf("{\"message\": \"unsupported http method [%s]\"}", method)
-	mustWrite := []byte(errorMessage)
-	writeBytesInResponse(w, &mustWrite)
+	writeAnyErrorResponse(w, nil, http.StatusNotFound, fmt.Sprintf("{\"message\": \"unsupported http method [%s]\"}", method))
 }
 
 func writeServerErrorResponse(w *http.ResponseWriter, err error) {
-	(*w).WriteHeader(http.StatusInternalServerError)
-	errorMessage := "{\"message\": \"internal server error\"}"
+	writeAnyErrorResponse(w, err, http.StatusInternalServerError, "{\"message\": \"internal server error\"}")
+}
+
+func writeBadRequestErrorResponse(w *http.ResponseWriter, err error) {
+	writeAnyErrorResponse(w, err, http.StatusBadRequest, "{\"message\": \"bad request\"}")
+}
+
+func writeAnyErrorResponse(w *http.ResponseWriter, err error, errorCode int, errorMessage string) {
+	(*w).WriteHeader(errorCode)
 	mustWrite := []byte(errorMessage)
 	writeBytesInResponse(w, &mustWrite)
-	log.Print(err)
+	if err != nil {
+		log.Print(err)
+	}
 }
