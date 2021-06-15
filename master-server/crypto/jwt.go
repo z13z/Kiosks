@@ -9,7 +9,7 @@ import (
 
 //todo zaza
 var signatureKey = []byte("changeIt")
-var durationForKey, _ = time.ParseDuration("1m")
+var durationForKey, _ = time.ParseDuration("1h")
 
 type KioskUserClaims struct {
 	Username    string `json:"username"`
