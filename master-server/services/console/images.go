@@ -31,6 +31,9 @@ func (DefaultImageScriptServiceHandler) ServeHTTP(w http.ResponseWriter, r *http
 
 func (ImageServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	if !CheckPermissionToCall(r, &w, permissionImagesKey) {
+		return
+	}
 	switch r.Method {
 	case "GET":
 		getImagesList(&w, r)

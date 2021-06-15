@@ -15,6 +15,9 @@ var usersBean = users.NewBean()
 
 func (UserServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	if !CheckPermissionToCall(r, &w, permissionUsersKey) {
+		return
+	}
 	switch r.Method {
 	case "GET":
 		getUsersList(&w, r)

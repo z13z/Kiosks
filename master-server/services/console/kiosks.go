@@ -13,6 +13,9 @@ var kiosksBean = kiosks.NewBean()
 
 func (KiosksServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	if !CheckPermissionToCall(r, &w, permissionKiosksKey) {
+		return
+	}
 	switch r.Method {
 	case "GET":
 		getKiosksList(&w, r)

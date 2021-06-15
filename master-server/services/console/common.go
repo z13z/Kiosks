@@ -44,11 +44,12 @@ func writeJsonInResponse(w *http.ResponseWriter, data string) {
 	writeBytesInResponse(w, &mustWrite)
 }
 
+func writeForbiddenError(w *http.ResponseWriter) {
+	writeAnyErrorResponse(w, nil, http.StatusForbidden, "{\"message\": \"request forbidden\"}")
+}
+
 func writeBadRequestError(w *http.ResponseWriter, requestBody string) {
-	(*w).WriteHeader(http.StatusBadRequest)
-	errorMessage := fmt.Sprintf("{\"message\": \"bad request [%s]\"}", requestBody)
-	mustWrite := []byte(errorMessage)
-	writeBytesInResponse(w, &mustWrite)
+	writeAnyErrorResponse(w, nil, http.StatusBadRequest, fmt.Sprintf("{\"message\": \"bad request [%s]\"}", requestBody))
 }
 
 func writeWrongHttpMethodResponse(w *http.ResponseWriter, method string) {
