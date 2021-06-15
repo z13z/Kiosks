@@ -44,6 +44,10 @@ func writeJsonInResponse(w *http.ResponseWriter, data string) {
 	writeBytesInResponse(w, &mustWrite)
 }
 
+func writeUnauthorizedError(w *http.ResponseWriter) {
+	writeAnyErrorResponse(w, nil, http.StatusUnauthorized, "{\"message\": \"unauthorized\"}")
+}
+
 func writeForbiddenError(w *http.ResponseWriter) {
 	writeAnyErrorResponse(w, nil, http.StatusForbidden, "{\"message\": \"request forbidden\"}")
 }

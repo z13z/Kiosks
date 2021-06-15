@@ -15,11 +15,11 @@ const LoginPage = () => {
         userData.password = event.target.value
     }
     const loginUserAction = (response) => {
-        console.log(JSON.stringify(response))
         localStorage.setItem(JWT_TOKEN_KEY, response.data.jwt)
         const jwtBody = JSON.parse(atob(response.data.jwt.split(".")[1]))
         localStorage.setItem(USERNAME_KEY, jwtBody.username)
         localStorage.setItem(USER_PERMISSIONS_KEY, jwtBody.permissions.replaceAll('\"', "").slice(1, -1))
+        window.location.reload()
     }
     const loginErrorAction = (error) => {
         console.log(error)

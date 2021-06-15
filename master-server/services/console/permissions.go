@@ -14,7 +14,11 @@ const authenticationHeaderKey = "Authentication"
 func CheckPermissionToCall(r *http.Request, w *http.ResponseWriter, permissionName string) bool {
 	authenticationToken := r.Header.Get(authenticationHeaderKey)
 	claims, ok := crypto.CheckJwt(authenticationToken)
-	if !ok || claims == nil || claims.Permissions == "" {
+	if !ok {
+		writeUnauthorizedError(w)
+		return false
+	}
+	if claims == nil || claims.Permissions == "" {
 		writeForbiddenError(w)
 		return false
 	}

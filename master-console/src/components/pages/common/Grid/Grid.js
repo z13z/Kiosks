@@ -70,7 +70,6 @@ class Grid extends Component {
     }
 
     loadData() {
-        const axiosHeader = {Authorization: localStorage.getItem(JWT_TOKEN_KEY)}
         let queryParams = {params: {}}
         this.getSearchProps().forEach(prop => {
             queryParams[prop] = this.props[prop]
@@ -78,11 +77,20 @@ class Grid extends Component {
         queryParams['offset'] = (this.state.currentPage - 1) * ROWS_COUNT_ON_PAGE
         queryParams['limit'] = ROWS_COUNT_ON_PAGE
         // noinspection JSCheckFunctionSignatures
-        axios.get(this.getQueryUrl(), {params: queryParams, header: axiosHeader}).then(response => {
+        axios.get(this.getQueryUrl(), {params: queryParams, headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY) }}).then(response => {
             this.setState({
                 data: response.data.rows,
                 pagesCount: Math.ceil(response.data.rowsCount / ROWS_COUNT_ON_PAGE)
             })
+        }).catch(error => {
+            if (error.response.status === 401) {
+                localStorage.removeItem(JWT_TOKEN_KEY)
+                window.location.reload();
+            } else if (error.response.status === 403){
+                alert("page is forbidden")
+            } else {
+                throw error;
+            }
         })
     }
 
