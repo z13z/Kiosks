@@ -3,11 +3,13 @@ import "./UsersPage.css"
 import RightPanel from "../common/RightPanel/RightPanel"
 import SearchPanel from "../common/SearchPanel/SearchPanel"
 import UsersGrid from "./UsersGrid";
+import UsersWindow from "../../windows/users/UsersWindow"
 
 const UsersPage = () => {
     const [currentState, setCurrentState] = useState({
         userId: "",
-        userName: ""
+        userName: "",
+        showCreateWindow: false
     });
 
     let newState = {...currentState}
@@ -24,6 +26,11 @@ const UsersPage = () => {
         setCurrentState(newState)
     }
 
+    const addCreateUserWindow = () => {
+        newState.showCreateWindow = true
+        updateState()
+    }
+
     return (
         <RightPanel>
             <SearchPanel>
@@ -38,8 +45,10 @@ const UsersPage = () => {
                 </label>
                 </label>
                 <button key="userSearchButton" onClick={updateState}>search</button>
+                <button key="createUserButton" onClick={addCreateUserWindow}>createUserButton</button>
             </SearchPanel>
             <UsersGrid id={currentState.userId} name={currentState.userName}/>
+            {currentState.showCreateWindow ? (<UsersWindow show='true'/>) : null}
         </RightPanel>
 
     )
