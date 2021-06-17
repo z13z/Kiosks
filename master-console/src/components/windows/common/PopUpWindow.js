@@ -2,6 +2,7 @@ import React from 'react'
 import Modal from 'react-modal';
 import {Button} from "reactstrap";
 
+Modal.setAppElement('#root')
 
 const popUpWindow = (props) => {
     const popUpWindowStyle = {
@@ -32,7 +33,7 @@ const popUpWindow = (props) => {
                     return (<div style={fieldStyle}>{field}</div>)
                 })}
             </div>
-            <Button color="success">
+            <Button color="success" onClick={props.onSubmit}>
                 Submit
             </Button>
             <Button color="warning" onClick={props.onClose}>
