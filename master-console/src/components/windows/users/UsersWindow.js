@@ -2,21 +2,23 @@ import {React, useState} from "react"
 import PopUpWindow from '../common/PopUpWindow'
 import {FormGroup, Input, Label} from 'reactstrap';
 import {ALL_USER_PERMISSIONS, JWT_TOKEN_KEY} from '../../../Constants'
-import axios from "axios";
 
 const UsersWindow = (props) => {
-    const [username, setUsername] = useState(props.username !== undefined ? props.username : "")
+    const [username, setUsername] = useState(props.userToShow !== null ? props.userToShow.username : "")
     const [password, setPassword] = useState("")
     const [repassword, setRePassword] = useState("")
-    const [permissions, setPermissions] = useState([])
+    const [permissions, setPermissions] = useState(props.userToShow !== null ? props.userToShow.permissions : [])
 
     const onSubmitAction = () => {
         let queryParams = {}
+        if (props.userToShow != null) {
+            queryParams['id'] = props.userToShow.id
+        }
         queryParams['name'] = username
         queryParams['password'] = password
         queryParams['permissions'] = permissions
 
-        axios.put('/users', queryParams, {headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)}}).then(() => {
+        props.axiosMethodToCall('/users', queryParams, {headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)}}).then(() => {
             props.successfullyUpdated()
         }).catch(error => {
             if (error.response.status === 401) {
@@ -29,8 +31,8 @@ const UsersWindow = (props) => {
             } else {
                 throw error;
             }
+            props.onClose()
         })
-        props.onClose()
     }
 
     const onUsernameChange = (event) => {

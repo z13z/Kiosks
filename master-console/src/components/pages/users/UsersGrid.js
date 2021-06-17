@@ -24,8 +24,11 @@ class UsersGrid extends Grid {
         return "/users"
     }
 
-    deleteAction(rowId){
-        axios.delete('/users', {headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)}, data: {rowId}}).then(() => {
+    deleteAction(rowId) {
+        axios.delete('/users', {
+            headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)},
+            data: {rowId}
+        }).then(() => {
             this.props.successfullyUpdated()
         }).catch(error => {
             if (error.response.status === 401) {
@@ -46,11 +49,12 @@ class UsersGrid extends Grid {
             <>
                 <td key={row.id + "_edit"} className="GridColumn" style={{width: '41px'}}>
                     <Button>
-                        <FontAwesomeIcon icon={faEdit}/>
+                        <FontAwesomeIcon icon={faEdit}
+                                         onClick={() => this.props.editUserAction(row.id, row.name, row.permissions)}/>
                     </Button>
                 </td>
                 <td key={row.id + "_delete"} className="GridColumn" style={{width: '41px'}}>
-                    <Button onClick={()=>this.deleteAction(row.id)}>
+                    <Button onClick={() => this.deleteAction(row.id)}>
                         <FontAwesomeIcon icon={faTrash}/>
                     </Button>
                 </td>

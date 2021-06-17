@@ -4,13 +4,15 @@ import RightPanel from "../common/RightPanel/RightPanel"
 import SearchPanel from "../common/SearchPanel/SearchPanel"
 import UsersGrid from "./UsersGrid";
 import UsersWindow from "../../windows/users/UsersWindow"
+import axios from "axios";
 
 const UsersPage = () => {
     const [currentState, setCurrentState] = useState({
         userId: "",
         userName: "",
         showCreateWindow: false,
-        forceGridUpdate: false
+        forceGridUpdate: false,
+        userToShow: null
     });
 
     let newState = {...currentState}
@@ -34,11 +36,27 @@ const UsersPage = () => {
 
     const closeCreateUserWindow = () => {
         newState.showCreateWindow = false
+        newState.userToShow = null
         updateState()
     }
 
     const forceGridUpdate = () => {
         newState.forceGridUpdate = !newState.forceGridUpdate
+        updateState()
+    }
+
+    const successfullyUpdated = () => {
+        newState.forceGridUpdate = !newState.forceGridUpdate
+        closeCreateUserWindow()
+    }
+
+    const editUserAction = (id, username, permissions) => {
+        newState.showCreateWindow = true
+        newState.userToShow = {
+            id: id,
+            username: username,
+            permissions: permissions
+        }
         updateState()
     }
 
@@ -59,8 +77,12 @@ const UsersPage = () => {
                 <button key="createUserButton" onClick={addCreateUserWindow}>createUserButton</button>
             </SearchPanel>
             <UsersGrid id={currentState.userId} name={currentState.userName} forceUpdate={currentState.forceGridUpdate}
-                       successfullyUpdated={forceGridUpdate}/>
-            {currentState.showCreateWindow ? (<UsersWindow onClose={closeCreateUserWindow} successfullyUpdated={forceGridUpdate}/>) : null}
+                       successfullyUpdated={forceGridUpdate} editUserAction={editUserAction}/>
+            {currentState.showCreateWindow ? (
+                    <UsersWindow onClose={closeCreateUserWindow} successfullyUpdated={successfullyUpdated}
+                                 userToShow={newState.userToShow}
+                                 axiosMethodToCall={newState.userToShow == null ? axios.put : axios.post}/>)
+                : null}
         </RightPanel>
 
     )
