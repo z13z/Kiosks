@@ -84,7 +84,6 @@ class Grid extends Component {
             })
         }).catch(error => {
             if (error.response.status === 401) {
-                console.log("here")
                 localStorage.removeItem(JWT_TOKEN_KEY)
                 window.location.reload();
             } else if (error.response.status === 403){

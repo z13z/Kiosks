@@ -1,7 +1,8 @@
 import {React, useState} from "react"
 import PopUpWindow from '../common/PopUpWindow'
 import {FormGroup, Input, Label} from 'reactstrap';
-import {ALL_USER_PERMISSIONS} from '../../../Constants'
+import {ALL_USER_PERMISSIONS, JWT_TOKEN_KEY} from '../../../Constants'
+import axios from "axios";
 
 const UsersWindow = (props) => {
     const [username, setUsername] = useState(props.username !== undefined ? props.username : "")
@@ -10,10 +11,25 @@ const UsersWindow = (props) => {
     const [permissions, setPermissions] = useState([])
 
     const onSubmitAction = () => {
-        console.log(username)
-        console.log(password)
-        console.log(repassword)
-        console.log(permissions)
+        let queryParams = {}
+        queryParams['name'] = username
+        queryParams['password'] = password
+        queryParams['permissions'] = permissions
+
+        axios.put('/users', queryParams, {headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)}}).then(response => {
+            console.log(response)
+        }).catch(error => {
+            if (error.response.status === 401) {
+                localStorage.removeItem(JWT_TOKEN_KEY)
+                window.location.reload();
+            } else if (error.response.status === 403) {
+                alert("action is forbidden")
+            } else if (error.response.status === 400) {
+                alert("user can't be inserted in database. check if username is unique")
+            } else {
+                throw error;
+            }
+        })
         props.onClose()
     }
 
