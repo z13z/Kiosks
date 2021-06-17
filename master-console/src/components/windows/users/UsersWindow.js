@@ -48,25 +48,29 @@ const UsersWindow = (props) => {
         setPermissions(Array.from(event.target.selectedOptions, option => option.value))
     }
 
+    const fieldStyle = {float: 'right'}
+
     return (
         <PopUpWindow {...props} onSubmit={onSubmitAction}>
             <FormGroup key='usernameGroupKey'>
                 <Label for="usernameField">Username</Label>
                 <Input type="text" name="username" id="usernameField" value={username} onChange={onUsernameChange}
-                       required/>
+                       style={fieldStyle} required/>
             </FormGroup>
             <FormGroup key='passwordFieldKey'>
                 <Label for="passwordField">Password</Label>
-                <Input type="password" name="password" id="passwordField" value={password} onChange={onPasswordChange}/>
+                <Input type="password" name="password" id="passwordField" value={password} onChange={onPasswordChange}
+                       style={fieldStyle}/>
             </FormGroup>
             <FormGroup key='rePasswordFieldKey'>
                 <Label for="rePasswordField">Reenter Password</Label>
                 <Input type="password" name="rePassword" id="rePasswordField" value={repassword}
-                       onChange={onRePasswordChange}/>
+                       onChange={onRePasswordChange} style={fieldStyle}/>
             </FormGroup>
             <FormGroup key='permissionsFieldKey'>
                 <Label for="permissionsField">Password</Label>
-                <Input type={'select'} name='permissions' id='permissionsField' onChange={onPermissionsChange} multiple>
+                <Input type={'select'} name='permissions' id='permissionsField' onChange={onPermissionsChange}
+                       style={fieldStyle} multiple>
                     {ALL_USER_PERMISSIONS.map((permissionName,) => {
                         return <option
                             value={permissionName}

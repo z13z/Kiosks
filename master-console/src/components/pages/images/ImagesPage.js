@@ -3,11 +3,14 @@ import "./ImagesPage.css"
 import RightPanel from "../common/RightPanel/RightPanel"
 import SearchPanel from "../common/SearchPanel/SearchPanel"
 import ImagesGrid from "./ImagesGrid";
+import ImagesWindow from "../../windows/images/ImagesWindow";
 
 const ImagesPage = () => {
     const [currentState, setCurrentState] = useState({
         imageId: "",
-        imageName: ""
+        imageName: "",
+        showWindow: false,
+        forceGridUpdate: false
     });
 
     let newState = {...currentState}
@@ -16,12 +19,27 @@ const ImagesPage = () => {
         newState.imageName = event.target.value
     }
 
+    const updateState = () => {
+        setCurrentState(newState)
+    }
+
     const updateImageId = (event) => {
         newState.imageId = event.target.value
     }
 
-    const updateState = () => {
-        setCurrentState(newState)
+    const addCreateImageWindow = () => {
+        newState.showWindow = true
+        updateState()
+    }
+
+    const closeImageWindow = () => {
+        newState.showWindow = false
+        updateState()
+    }
+
+    const successfullyUpdated = () => {
+        newState.forceGridUpdate = !newState.forceGridUpdate
+        closeImageWindow()
     }
 
     return (
@@ -38,8 +56,12 @@ const ImagesPage = () => {
                 </label>
                 </label>
                 <button key="imageSearchButton" onClick={updateState}>search</button>
+                <button key="createImageButton" onClick={addCreateImageWindow}>create</button>
             </SearchPanel>
             <ImagesGrid id={currentState.imageId} name={currentState.imageName}/>
+            {currentState.showWindow ? (
+                    <ImagesWindow onClose={closeImageWindow} successfullyUpdated={successfullyUpdated}/>)
+                : null}
         </RightPanel>
 
     )

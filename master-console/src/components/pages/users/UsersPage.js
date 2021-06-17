@@ -10,7 +10,7 @@ const UsersPage = () => {
     const [currentState, setCurrentState] = useState({
         userId: "",
         userName: "",
-        showCreateWindow: false,
+        showWindow: false,
         forceGridUpdate: false,
         userToShow: null
     });
@@ -30,12 +30,12 @@ const UsersPage = () => {
     }
 
     const addCreateUserWindow = () => {
-        newState.showCreateWindow = true
+        newState.showWindow = true
         updateState()
     }
 
-    const closeCreateUserWindow = () => {
-        newState.showCreateWindow = false
+    const closeUserWindow = () => {
+        newState.showWindow = false
         newState.userToShow = null
         updateState()
     }
@@ -47,11 +47,11 @@ const UsersPage = () => {
 
     const successfullyUpdated = () => {
         newState.forceGridUpdate = !newState.forceGridUpdate
-        closeCreateUserWindow()
+        closeUserWindow()
     }
 
     const editUserAction = (id, username, permissions) => {
-        newState.showCreateWindow = true
+        newState.showWindow = true
         newState.userToShow = {
             id: id,
             username: username,
@@ -74,12 +74,12 @@ const UsersPage = () => {
                 </label>
                 </label>
                 <button key="userSearchButton" onClick={updateState}>search</button>
-                <button key="createUserButton" onClick={addCreateUserWindow}>createUserButton</button>
+                <button key="createUserButton" onClick={addCreateUserWindow}>create</button>
             </SearchPanel>
             <UsersGrid id={currentState.userId} name={currentState.userName} forceUpdate={currentState.forceGridUpdate}
                        successfullyUpdated={forceGridUpdate} editUserAction={editUserAction}/>
-            {currentState.showCreateWindow ? (
-                    <UsersWindow onClose={closeCreateUserWindow} successfullyUpdated={successfullyUpdated}
+            {currentState.showWindow ? (
+                    <UsersWindow onClose={closeUserWindow} successfullyUpdated={successfullyUpdated}
                                  userToShow={newState.userToShow}
                                  axiosMethodToCall={newState.userToShow == null ? axios.put : axios.post}/>)
                 : null}

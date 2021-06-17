@@ -17,11 +17,10 @@ const popUpWindow = (props) => {
     const contentDivStyle = {
         marginLeft: 'auto',
         marginRight: 'auto',
-        width: '40%'
+        width: '30%'
     }
 
     const fieldStyle = {
-        float: 'right',
         paddingBottom: '20px'
     }
 
