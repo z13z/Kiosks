@@ -4,7 +4,7 @@ import Grid from "../common/Grid/Grid";
 class UsersGrid extends Grid {
 
     getColumns() {
-        return ["id", "name"]
+        return ["id", "name", "permissions"]
     }
 
     getSearchProps(){

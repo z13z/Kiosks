@@ -45,7 +45,8 @@ class Grid extends Component {
                         </thead>
                         <tbody>{this.state.data != null ? this.state.data.map(row => <tr className="GridRow"
                                                                                          key={row.id}>{(allColumns.map(col =>
-                            <td key={row.id + '_' + col} className="GridColumn">{row[col]}</td>))}</tr>) : null}
+                            <td key={row.id + '_' + col}
+                                className="GridColumn">{JSON.stringify(row[col]).replaceAll('"', "")}</td>))}</tr>) : null}
                         </tbody>
                     </table>
                 </div>
@@ -77,7 +78,10 @@ class Grid extends Component {
         queryParams['offset'] = (this.state.currentPage - 1) * ROWS_COUNT_ON_PAGE
         queryParams['limit'] = ROWS_COUNT_ON_PAGE
         // noinspection JSCheckFunctionSignatures
-        axios.get(this.getQueryUrl(), {params: queryParams, headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY) }}).then(response => {
+        axios.get(this.getQueryUrl(), {
+            params: queryParams,
+            headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)}
+        }).then(response => {
             this.setState({
                 data: response.data.rows,
                 pagesCount: Math.ceil(response.data.rowsCount / ROWS_COUNT_ON_PAGE)
@@ -86,7 +90,7 @@ class Grid extends Component {
             if (error.response.status === 401) {
                 localStorage.removeItem(JWT_TOKEN_KEY)
                 window.location.reload();
-            } else if (error.response.status === 403){
+            } else if (error.response.status === 403) {
                 alert("page is forbidden")
             } else {
                 throw error;
