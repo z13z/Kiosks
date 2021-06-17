@@ -3,7 +3,9 @@ package common
 import (
 	"database/sql"
 	"fmt"
+	"github.com/lib/pq"
 	_ "github.com/lib/pq"
+	"log"
 	"strconv"
 	"strings"
 )
@@ -115,6 +117,34 @@ func (connector *DBConnector) UpdateObjectInDb(entity IEntity) int64 {
 		panic(err)
 	}
 	return updatedCount
+}
+
+func (connector *DBConnector) InsertObjectInDb(entity IEntity) bool {
+	fieldNamesString := strings.Join(*(entity).GetEditableFieldNames(), ",")
+	fieldValuesHoldersString := ""
+	for ind := range *(entity).GetEditableFieldNames() {
+		if ind > 0 {
+			fieldValuesHoldersString += ", "
+		}
+		fieldValuesHoldersString += "$" + strconv.Itoa(ind+1)
+	}
+
+	fieldValueHolders := *(entity).GetEditableFieldValueHolders()
+	result, err := connector.pool.Exec(fmt.Sprintf("INSERT INTO %s(%s) VALUES (%s)", (entity).GetTableName(),
+		fieldNamesString, fieldValuesHoldersString), fieldValueHolders...)
+	if err != nil {
+		if err.(*pq.Error).Code.Name() == "unique_violation" {
+			log.Print(err)
+			return false
+		} else {
+			log.Fatal(err)
+		}
+	}
+	updatedCount, err := result.RowsAffected()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return updatedCount == 1
 }
 
 func (connector *DBConnector) getRowsCountFromDb(tableName string, wherePart *string, wherePartValues *[]interface{}) int {

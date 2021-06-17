@@ -24,7 +24,7 @@ CREATE TABLE Kiosk
 CREATE TABLE KioskUser
 (
     id          BIGINT GENERATED ALWAYS AS IDENTITY,
-    name        VARCHAR(128)              NOT NULL,
+    name        VARCHAR(128) UNIQUE       NOT NULL,
     update_time TIMESTAMP                 NOT NULL,
     permissions KioskUserPermission ARRAY NOT NULL,
     password    VARCHAR(512),

@@ -49,7 +49,7 @@ func (user *UserEntity) GetEditableFieldNames() *[]string {
 }
 
 func (user *UserEntity) GetEditableFieldValueHolders() *[]interface{} {
-	return &([]interface{}{&user.Id, &user.Name, &user.UpdateTime, &user.Permissions, &user.Password})
+	return &([]interface{}{&user.Name, &user.UpdateTime, &user.Permissions, &user.Password})
 }
 
 func (user *UserEntity) GetId() int64 {

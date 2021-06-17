@@ -86,6 +86,33 @@ func TestDBConnector_UpdateObjectInDb(t *testing.T) {
 	}
 }
 
+func TestDBConnector_InsertObjectInDb(t *testing.T) {
+	type fields struct {
+		pool *sql.DB
+	}
+	type args struct {
+		entity IEntity
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   bool
+	}{
+		{"basicInsertQuery", fields{pool: getInsertRowsDbPool("mock", 1)}, args{entity: &MockEntity{id: 1, name: "mock"}}, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			connector := &DBConnector{
+				pool: tt.fields.pool,
+			}
+			if got := connector.InsertObjectInDb(tt.args.entity); got != tt.want {
+				t.Errorf("InsertObjectInDb() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestDBConnector_GetObjectsCountFromDb(t *testing.T) {
 	type fields struct {
 		pool *sql.DB
@@ -155,6 +182,15 @@ func getUpdateRowsDbPool(id int64, name string, updated int64) *sql.DB {
 		panic("problem with db mocking")
 	}
 	mock.ExpectExec("UPDATE Mock SET name = \\$2 WHERE id = \\$1").WithArgs(driver.Value(id), driver.Value(name)).WillReturnResult(sqlmock.NewResult(21, updated))
+	return db
+}
+
+func getInsertRowsDbPool(name string, updated int64) *sql.DB {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		panic("problem with db mocking")
+	}
+	mock.ExpectExec("INSERT INTO Mock\\(name\\) VALUES \\(\\$1\\)").WithArgs(driver.Value(name)).WillReturnResult(sqlmock.NewResult(21, updated))
 	return db
 }
 

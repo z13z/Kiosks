@@ -4,9 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/lib/pq"
 	"github.com/z13z/Kiosks/master-server/db/users"
 	"math"
 	"net/http"
+	"strings"
+	"time"
 )
 
 type UserServiceHandler struct{}
@@ -24,8 +27,7 @@ func (UserServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case "POST":
 		editUser(&w, r)
 	case "PUT":
-		//todo implement
-		//addUser(w, r)
+		addUser(&w, r)
 	case "DELETE":
 		//todo implement
 		//deleteUser()
@@ -35,6 +37,14 @@ func (UserServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func editUser(w *http.ResponseWriter, r *http.Request) {
+	addOrEditUser(w, r, usersBean.EditUser)
+}
+
+func addUser(w *http.ResponseWriter, r *http.Request) {
+	addOrEditUser(w, r, usersBean.AddUser)
+}
+
+func addOrEditUser(w *http.ResponseWriter, r *http.Request, action func(entity *users.UserEntity) error) {
 	buffer := new(bytes.Buffer)
 	_, err := buffer.ReadFrom(r.Body)
 	readBytes := buffer.Bytes()
@@ -42,12 +52,18 @@ func editUser(w *http.ResponseWriter, r *http.Request) {
 		writeServerErrorResponse(w, err)
 		return
 	}
-	entity := users.UserEntity{}
-	err = json.Unmarshal(readBytes, &entity)
+	requestUser := RequestUserDAO{}
+	err = json.Unmarshal(readBytes, &requestUser)
 	if err != nil {
 		writeBadRequestError(w, fmt.Sprintf("Can't unmarshal User from json [%s]", string(readBytes)))
 	}
-	err = usersBean.EditUser(&entity)
+	entityUser, err := requestUser.getEntityObject()
+	if err != nil {
+		writeBadRequestError(w, string(readBytes))
+		return
+	}
+	//edit or add user
+	err = action(entityUser)
 	if err != nil {
 		writeBadRequestError(w, string(readBytes))
 	} else {
@@ -92,4 +108,27 @@ func getUsersList(w *http.ResponseWriter, r *http.Request) {
 type usersListResponse struct {
 	Rows      []users.UserEntity `json:"rows"`
 	RowsCount int                `json:"rowsCount"`
+}
+
+type RequestUserDAO struct {
+	Id          int64    `json:"id"`
+	Name        string   `json:"name"`
+	Permissions []string `json:"permissions"`
+	Password    string   `json:"password"`
+}
+
+func (req *RequestUserDAO) getEntityObject() (*users.UserEntity, error) {
+	entity := users.UserEntity{}
+	entity.Name = req.Name
+	entity.Password = usersBean.GetPassword(req.Password)
+	entity.UpdateTime = time.Now()
+	if req.Permissions != nil {
+		arr := pq.StringArray{}
+		err := arr.Scan("{" + strings.Join(req.Permissions, ",") + "}")
+		if err != nil {
+			return nil, err
+		}
+		entity.Permissions = arr
+	}
+	return &entity, nil
 }
