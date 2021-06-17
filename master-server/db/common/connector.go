@@ -102,6 +102,9 @@ func (connector *DBConnector) selectRowsFromDb(tableName string, fieldNames *[]s
 func (connector *DBConnector) UpdateObjectInDb(entity IEntity) int64 {
 	fieldsAssignmentStr := ""
 	for ind, fieldName := range *(entity).GetEditableFieldNames() {
+		if ind != 0 {
+			fieldsAssignmentStr += ", "
+		}
 		fieldsAssignmentStr += fieldName + " = $" + strconv.Itoa(ind+2)
 	}
 
@@ -110,7 +113,12 @@ func (connector *DBConnector) UpdateObjectInDb(entity IEntity) int64 {
 	result, err := connector.pool.Exec(fmt.Sprintf("UPDATE %s SET %s WHERE id = $1", (entity).GetTableName(),
 		fieldsAssignmentStr), fieldValueHolders...)
 	if err != nil {
-		panic(err)
+		if err.(*pq.Error).Code.Name() == "unique_violation" {
+			log.Print(err)
+			return 0
+		} else {
+			log.Fatal(err)
+		}
 	}
 	updatedCount, err := result.RowsAffected()
 	if err != nil {

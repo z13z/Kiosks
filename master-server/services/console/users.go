@@ -143,6 +143,7 @@ type RequestUserDAO struct {
 
 func (req *RequestUserDAO) getEntityObject() (*users.UserEntity, error) {
 	entity := users.UserEntity{}
+	entity.Id = req.Id
 	entity.Name = req.Name
 	entity.Password = usersBean.GetPassword(req.Password)
 	entity.UpdateTime = time.Now()
