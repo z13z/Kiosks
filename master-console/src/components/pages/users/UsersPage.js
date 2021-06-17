@@ -9,7 +9,8 @@ const UsersPage = () => {
     const [currentState, setCurrentState] = useState({
         userId: "",
         userName: "",
-        showCreateWindow: false
+        showCreateWindow: false,
+        forceGridUpdate: false
     });
 
     let newState = {...currentState}
@@ -36,6 +37,11 @@ const UsersPage = () => {
         updateState()
     }
 
+    const forceGridUpdate = () => {
+        newState.forceGridUpdate = !newState.forceGridUpdate
+        updateState()
+    }
+
     return (
         <RightPanel>
             <SearchPanel>
@@ -52,8 +58,9 @@ const UsersPage = () => {
                 <button key="userSearchButton" onClick={updateState}>search</button>
                 <button key="createUserButton" onClick={addCreateUserWindow}>createUserButton</button>
             </SearchPanel>
-            <UsersGrid id={currentState.userId} name={currentState.userName}/>
-            {currentState.showCreateWindow ? (<UsersWindow onClose={closeCreateUserWindow}/>) : null}
+            <UsersGrid id={currentState.userId} name={currentState.userName} forceUpdate={currentState.forceGridUpdate}
+                       successfullyUpdated={forceGridUpdate}/>
+            {currentState.showCreateWindow ? (<UsersWindow onClose={closeCreateUserWindow} successfullyUpdated={forceGridUpdate}/>) : null}
         </RightPanel>
 
     )

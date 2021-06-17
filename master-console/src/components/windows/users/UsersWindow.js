@@ -16,8 +16,8 @@ const UsersWindow = (props) => {
         queryParams['password'] = password
         queryParams['permissions'] = permissions
 
-        axios.put('/users', queryParams, {headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)}}).then(response => {
-            console.log(response)
+        axios.put('/users', queryParams, {headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)}}).then(() => {
+            props.successfullyUpdated()
         }).catch(error => {
             if (error.response.status === 401) {
                 localStorage.removeItem(JWT_TOKEN_KEY)

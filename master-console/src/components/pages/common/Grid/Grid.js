@@ -35,7 +35,12 @@ class Grid extends Component {
 
     render() {
         const allColumns = this.getColumns()
-        const header = allColumns.map(col => <th key={col} className="GridHeader">{col}</th>)
+        const header = (
+            <>
+                {allColumns.map(col => <th key={col} className="GridHeader">{col}</th>)}
+                {this.getActionColumnsHeader().map(cl => <th key={cl} className="GridHeader"/>)}
+            </>
+        )
         return (
             <div>
                 <div className="GridTableDiv">
@@ -43,10 +48,12 @@ class Grid extends Component {
                         <thead>
                         <tr className="GridHeader">{header}</tr>
                         </thead>
-                        <tbody>{this.state.data != null ? this.state.data.map(row => <tr className="GridRow"
-                                                                                         key={row.id}>{(allColumns.map(col =>
-                            <td key={row.id + '_' + col}
-                                className="GridColumn">{JSON.stringify(row[col]).replaceAll('"', "")}</td>))}</tr>) : null}
+                        <tbody>{this.state.data != null ? this.state.data.map(row =>
+                            <tr className="GridRow" key={row.id}>{(allColumns.map(col =>
+                                <td key={row.id + '_' + col}
+                                    className="GridColumn">{JSON.stringify(row[col]).replaceAll('"', "")}</td>))}
+                                {this.getActionColumns(row)}
+                            </tr>) : null}
                         </tbody>
                     </table>
                 </div>
@@ -64,10 +71,15 @@ class Grid extends Component {
         }
     }
 
-    //abstract methods
+    //abstract method
     getColumns() {
         console.error("getColumns isn't implemented in Grid")
         throw new TypeError("getColumns isn't implemented in Grid")
+    }
+
+    //abstract method
+    getActionColumns(row) {
+        return null
     }
 
     loadData() {
@@ -106,6 +118,10 @@ class Grid extends Component {
     getQueryUrl() {
         console.error("getColumns isn't implemented in Grid")
         throw new TypeError("getColumns isn't implemented in Grid")
+    }
+
+    getActionColumnsHeader() {
+        return []
     }
 }
 
