@@ -4,9 +4,9 @@ CREATE TYPE KioskUserPermission AS ENUM ('users', 'images', 'kiosks');
 CREATE TABLE KioskImage
 (
     id          BIGINT GENERATED ALWAYS AS IDENTITY,
-    name        VARCHAR(128) NOT NULL,
-    create_time TIMESTAMP    NOT NULL,
-    script      VARCHAR      NOT NULL,
+    name        VARCHAR(128) UNIQUE NOT NULL,
+    create_time TIMESTAMP           NOT NULL,
+    script      VARCHAR             NOT NULL,
     state       KioskImageState,
     PRIMARY KEY (id)
 );
