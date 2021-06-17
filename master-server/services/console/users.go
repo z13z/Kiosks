@@ -29,10 +29,30 @@ func (UserServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case "PUT":
 		addUser(&w, r)
 	case "DELETE":
-		//todo implement
-		//deleteUser()
+		deleteUser(&w, r)
 	default:
 		writeWrongHttpMethodResponse(&w, r.Method)
+	}
+}
+
+func deleteUser(w *http.ResponseWriter, r *http.Request) {
+	buffer := new(bytes.Buffer)
+	_, err := buffer.ReadFrom(r.Body)
+	readBytes := buffer.Bytes()
+	if err != nil {
+		writeServerErrorResponse(w, err)
+		return
+	}
+	requestUser := DeleteRequest{}
+	err = json.Unmarshal(readBytes, &requestUser)
+	if err != nil {
+		writeBadRequestError(w, fmt.Sprintf("Can't unmarshal User from json [%s]", string(readBytes)))
+	}
+	err = usersBean.DeleteUser(requestUser.RowId)
+	if err != nil {
+		writeBadRequestError(w, string(readBytes))
+	} else {
+		(*w).WriteHeader(http.StatusAccepted)
 	}
 }
 
@@ -108,6 +128,10 @@ func getUsersList(w *http.ResponseWriter, r *http.Request) {
 type usersListResponse struct {
 	Rows      []users.UserEntity `json:"rows"`
 	RowsCount int                `json:"rowsCount"`
+}
+
+type DeleteRequest struct {
+	RowId int64 `json:"rowId"`
 }
 
 type RequestUserDAO struct {

@@ -84,3 +84,10 @@ func (bean *Bean) GetUserByUsername(username string) *UserEntity {
 func (bean *Bean) GetPassword(password string) string {
 	return fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
 }
+
+func (bean *Bean) DeleteUser(id int64) error {
+	if !bean.connector.DeleteObjectInDb(&UserEntity{Id: id}) {
+		return fmt.Errorf("user with id [%d] doesn't in database", id)
+	}
+	return nil
+}

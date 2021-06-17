@@ -177,6 +177,15 @@ func (connector *DBConnector) getRowsCountFromDb(tableName string, wherePart *st
 
 }
 
+func (connector *DBConnector) DeleteObjectInDb(entity IEntity) bool {
+	result, err := connector.pool.Exec(fmt.Sprintf("DELETE FROM %s WHERE id = $1", (entity).GetTableName()), entity.GetId())
+	if err != nil {
+		return false
+	}
+	updatedCount, _ := result.RowsAffected()
+	return updatedCount == 1
+}
+
 func getFieldNamesAndValuesMap(names *[]string, holders *[]interface{}) map[string]interface{} {
 	resultFieldNamesAndValuesMap := make(map[string]interface{})
 	for ind, name := range *names {
