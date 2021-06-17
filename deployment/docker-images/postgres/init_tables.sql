@@ -30,3 +30,6 @@ CREATE TABLE KioskUser
     password    VARCHAR(512),
     PRIMARY KEY (id)
 );
+
+INSERT INTO KioskUser(name, update_time, permissions, password)
+VALUES ('zaza13', now(), '{kiosks,images,users}', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918')
