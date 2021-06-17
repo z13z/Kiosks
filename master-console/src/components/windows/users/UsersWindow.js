@@ -1,6 +1,6 @@
 import {React} from 'react'
 import PopUpWindow from '../common/PopUpWindow'
-import {Button, FormGroup, Input, Label} from 'reactstrap';
+import {FormGroup, Input, Label} from 'reactstrap';
 import {ALL_USER_PERMISSIONS} from '../../../Constants'
 
 const usersWindow = (props) => {
@@ -35,9 +35,6 @@ const usersWindow = (props) => {
                     }
                 </Input>
             </FormGroup>
-            <Button variant="primary" type="submit" key="submitUserFromField">
-                Submit
-            </Button>
         </PopUpWindow>
     )
 }

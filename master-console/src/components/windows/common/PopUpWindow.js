@@ -1,29 +1,43 @@
 import React from 'react'
-import {Button, Modal, ModalBody} from 'reactstrap';
+import Modal from 'react-modal';
+import {Button} from "reactstrap";
+
 
 const popUpWindow = (props) => {
+    const popUpWindowStyle = {
+        overlay: {
+            backgroundColor: 'lightsteelblue'
+        },
+        content: {
+            color: 'blue'
+        }
+    }
+
+    const contentDivStyle = {
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        width: '40%'
+    }
+
+    const fieldStyle = {
+        float: 'right',
+        paddingBottom: '20px'
+    }
+
     return (
-        <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered>
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Modal heading
-                </Modal.Title>
-            </Modal.Header>
-            <ModalBody>
-                <div>
-                    {props.children.map((field,) => {
-                        return ({field})
-                    })}
-                </div>
-            </ModalBody>
-            <Modal.Footer>
-                <Button onClick={() => {
-                }}>Close</Button>
-            </Modal.Footer>
+        <Modal style={popUpWindowStyle}
+               isOpen={true}>
+            <div style={contentDivStyle}>
+                {props.children.map((field,) => {
+                    return (<div style={fieldStyle}>{field}</div>)
+                })}
+            </div>
+            <Button color="success">
+                Submit
+            </Button>
+            <Button color="warning" onClick={props.onClose}>
+                close
+            </Button>
         </Modal>
     )
 }

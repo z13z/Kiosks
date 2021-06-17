@@ -31,6 +31,11 @@ const UsersPage = () => {
         updateState()
     }
 
+    const closeCreateUserWindow = () => {
+        newState.showCreateWindow = false
+        updateState()
+    }
+
     return (
         <RightPanel>
             <SearchPanel>
@@ -48,7 +53,7 @@ const UsersPage = () => {
                 <button key="createUserButton" onClick={addCreateUserWindow}>createUserButton</button>
             </SearchPanel>
             <UsersGrid id={currentState.userId} name={currentState.userName}/>
-            {currentState.showCreateWindow ? (<UsersWindow show='true'/>) : null}
+            {currentState.showCreateWindow ? (<UsersWindow onClose={closeCreateUserWindow}/>) : null}
         </RightPanel>
 
     )
