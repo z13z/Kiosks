@@ -102,11 +102,17 @@ func getImagesList(w *http.ResponseWriter, r *http.Request) {
 	var found bool
 	imageId, _ := getIntFromQuery(r.URL.Query()["id"])
 	imageNameParam := r.URL.Query()["name"]
-	var imageName string
+	imageStateParam := r.URL.Query()["state"]
+	var imageName, imageState string
 	if imageNameParam != nil && len(imageNameParam) > 0 {
 		imageName = imageNameParam[0]
 	} else {
 		imageName = ""
+	}
+	if imageStateParam != nil && len(imageStateParam) > 0 {
+		imageState = imageStateParam[0]
+	} else {
+		imageState = ""
 	}
 	oneImage := getBooleanFromQuery(r.URL.Query()["oneImage"])
 	offset, found := getIntFromQuery(r.URL.Query()["offset"])
@@ -122,8 +128,8 @@ func getImagesList(w *http.ResponseWriter, r *http.Request) {
 	if oneImage {
 		mustWrite, err = json.Marshal(*imagesBean.GetImage(imageId))
 	} else {
-		response := imagesListResponse{Rows: *imagesBean.GetImages(imageId, imageName, offset, limit),
-			RowsCount: imagesBean.GetImagesCount(imageId, imageName)}
+		response := imagesListResponse{Rows: *imagesBean.GetImages(imageId, imageName, imageState, offset, limit),
+			RowsCount: imagesBean.GetImagesCount(imageId, imageName, imageState)}
 		mustWrite, err = json.Marshal(response)
 	}
 	if err != nil {

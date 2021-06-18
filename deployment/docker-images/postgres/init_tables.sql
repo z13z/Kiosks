@@ -1,4 +1,4 @@
-CREATE TYPE KioskImageState AS ENUM ('created', 'waiting', 'done');
+CREATE TYPE KioskImageState AS ENUM ('created', 'waiting', 'building', 'failed', 'done');
 CREATE TYPE KioskUserPermission AS ENUM ('users', 'images', 'kiosks');
 
 CREATE TABLE KioskImage
