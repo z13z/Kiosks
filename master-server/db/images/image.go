@@ -47,7 +47,7 @@ func (image *ImageEntity) GetEditableFieldNames() *[]string {
 }
 
 func (image *ImageEntity) GetEditableFieldValueHolders() *[]interface{} {
-	return &([]interface{}{&image.Id, &image.Name, &image.CreateTime, &image.State, &image.Script})
+	return &([]interface{}{&image.Name, &image.CreateTime, &image.State, &image.Script})
 }
 
 func (image *ImageEntity) GetId() int64 {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/z13z/Kiosks/master-server/db/common"
 	"strconv"
+	"time"
 )
 
 type Bean struct {
@@ -55,6 +56,16 @@ func (bean *Bean) EditImage(entity *ImageEntity) error {
 	updated := bean.connector.UpdateObjectInDb(entity)
 	if updated != 1 {
 		return fmt.Errorf("image with id [%d] doesn't exist in database", entity.Id)
+	}
+	return nil
+}
+
+func (bean *Bean) AddImage(entity *ImageEntity) error {
+	entity.State = "created"
+	entity.CreateTime = time.Now()
+	updated := bean.connector.InsertObjectInDb(entity)
+	if !updated {
+		return fmt.Errorf("image with name [%s] exists exist in database", entity.Name)
 	}
 	return nil
 }
