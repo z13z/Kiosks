@@ -18,7 +18,7 @@ type DBConnector struct {
 const dbName = "kiosks"
 const dbDriverName = "postgres"
 const dbUser = "postgres"
-const dbPassword = "postgres"
+const dbPassword = "z13kiosks"
 const dbHost = "localhost"
 const dbPort = "5432"
 

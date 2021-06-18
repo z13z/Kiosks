@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: postgres-db
-          image: zaza13/kiosks/postgres:1.0
+          image: zaza13/kiosks/postgres:1.1
           ports:
             - containerPort: 5432
           livenessProbe:
