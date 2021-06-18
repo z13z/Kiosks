@@ -4,16 +4,16 @@ import axios from "axios";
 import {JWT_TOKEN_KEY} from "../../../Constants";
 import {Button} from "reactstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faEdit, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faEdit, faPlay, faTrash} from "@fortawesome/free-solid-svg-icons";
 
 class ImagesGrid extends Grid {
 
     getColumns() {
-        return ["id", "name"]
+        return ["id", "name", "state"]
     }
 
     getActionColumnsHeader() {
-        return ["edit", "delete"]
+        return ["build", "edit", "delete"]
     }
 
     getSearchProps() {
@@ -22,6 +22,30 @@ class ImagesGrid extends Grid {
 
     getQueryUrl() {
         return "/image"
+    }
+
+    buildImageAction(row) {
+        let queryParams = {}
+        queryParams['id'] = row.id
+        queryParams['name'] = row.name
+        queryParams['script'] = row.script
+        queryParams['state'] = "waiting"
+
+        axios.post('/image', queryParams, {headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)}}).then(() => {
+            this.props.successfullyUpdated()
+        }).catch(error => {
+            if (error.response.status === 401) {
+                localStorage.removeItem(JWT_TOKEN_KEY)
+                window.location.reload();
+            } else if (error.response.status === 403) {
+                alert("action is forbidden")
+            } else if (error.response.status === 400) {
+                alert("image can't be built")
+            } else {
+                throw error;
+            }
+            this.props.onClose()
+        })
     }
 
     deleteAction(rowId) {
@@ -51,6 +75,13 @@ class ImagesGrid extends Grid {
     getActionColumns(row) {
         return (
             <>
+                <td key={row.id + "_build"} className="GridColumn" style={{width: '41px'}}>
+                    <Button style={row.state !== 'created' ? {opacity: '30%'} : null}
+                            disabled={row.state !== 'created'}>
+                        <FontAwesomeIcon icon={faPlay}
+                                         onClick={() => this.buildImageAction(row)}/>
+                    </Button>
+                </td>
                 <td key={row.id + "_edit"} className="GridColumn" style={{width: '41px'}}>
                     <Button>
                         <FontAwesomeIcon icon={faEdit}

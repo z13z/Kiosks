@@ -14,6 +14,7 @@ const ImagesWindow = (props) => {
         }
         queryParams['name'] = imageName
         queryParams['script'] = imageScript
+        queryParams['state'] = "created"
 
         props.axiosMethodToCall('/image', queryParams, {headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)}}).then(() => {
             props.successfullyUpdated()
