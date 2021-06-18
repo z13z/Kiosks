@@ -58,7 +58,7 @@ const ImagesPage = () => {
                 <button key="imageSearchButton" onClick={updateState}>search</button>
                 <button key="createImageButton" onClick={addCreateImageWindow}>create</button>
             </SearchPanel>
-            <ImagesGrid id={currentState.imageId} name={currentState.imageName}/>
+            <ImagesGrid id={currentState.imageId} name={currentState.imageName} forceGridUpdate={currentState.forceGridUpdate}/>
             {currentState.showWindow ? (
                     <ImagesWindow onClose={closeImageWindow} successfullyUpdated={successfullyUpdated}/>)
                 : null}

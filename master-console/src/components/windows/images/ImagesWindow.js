@@ -10,10 +10,10 @@ const ImagesWindow = (props) => {
 
     const onSubmitAction = () => {
         let queryParams = {}
-        queryParams['imageName'] = imageName
-        queryParams['imageScript'] = imageScript
+        queryParams['name'] = imageName
+        queryParams['script'] = imageScript
 
-        axios.put('/images', queryParams, {headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)}}).then(() => {
+        axios.put('/image', queryParams, {headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)}}).then(() => {
             props.successfullyUpdated()
         }).catch(error => {
             if (error.response.status === 401) {
