@@ -2,18 +2,20 @@ import {React, useState} from "react"
 import PopUpWindow from '../common/PopUpWindow'
 import {FormGroup, Input, Label} from 'reactstrap';
 import {JWT_TOKEN_KEY} from '../../../Constants'
-import axios from "axios";
 
 const ImagesWindow = (props) => {
-    const [imageName, setImageName] = useState("")
-    const [imageScript, setImageScript] = useState("")
+    const [imageName, setImageName] = useState(props.imageToShow !== null ? props.imageToShow.name : "")
+    const [imageScript, setImageScript] = useState(props.imageToShow !== null ? props.imageToShow.script : "")
 
     const onSubmitAction = () => {
         let queryParams = {}
+        if (props.imageToShow != null) {
+            queryParams['id'] = props.imageToShow.id
+        }
         queryParams['name'] = imageName
         queryParams['script'] = imageScript
 
-        axios.put('/image', queryParams, {headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)}}).then(() => {
+        props.axiosMethodToCall('/image', queryParams, {headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)}}).then(() => {
             props.successfullyUpdated()
         }).catch(error => {
             if (error.response.status === 401) {

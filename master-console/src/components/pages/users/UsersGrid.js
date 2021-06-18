@@ -25,7 +25,7 @@ class UsersGrid extends Grid {
     }
 
     deleteAction(rowId) {
-        axios.delete('/users', {
+        axios.delete(this.getQueryUrl(), {
             headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)},
             data: {rowId}
         }).then(() => {

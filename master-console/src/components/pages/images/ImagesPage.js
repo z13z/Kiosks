@@ -4,13 +4,15 @@ import RightPanel from "../common/RightPanel/RightPanel"
 import SearchPanel from "../common/SearchPanel/SearchPanel"
 import ImagesGrid from "./ImagesGrid";
 import ImagesWindow from "../../windows/images/ImagesWindow";
+import axios from "axios";
 
 const ImagesPage = () => {
     const [currentState, setCurrentState] = useState({
         imageId: "",
         imageName: "",
         showWindow: false,
-        forceGridUpdate: false
+        forceGridUpdate: false,
+        imageToShow: null
     });
 
     let newState = {...currentState}
@@ -42,6 +44,16 @@ const ImagesPage = () => {
         closeImageWindow()
     }
 
+    const editImageAction = (id, username, permissions) => {
+        newState.showWindow = true
+        newState.imageToShow = {
+            id: id,
+            name: username,
+            script: permissions
+        }
+        updateState()
+    }
+
     return (
         <RightPanel>
             <SearchPanel>
@@ -58,9 +70,13 @@ const ImagesPage = () => {
                 <button key="imageSearchButton" onClick={updateState}>search</button>
                 <button key="createImageButton" onClick={addCreateImageWindow}>create</button>
             </SearchPanel>
-            <ImagesGrid id={currentState.imageId} name={currentState.imageName} forceGridUpdate={currentState.forceGridUpdate}/>
+            <ImagesGrid id={currentState.imageId} name={currentState.imageName}
+                        forceGridUpdate={currentState.forceGridUpdate} editImageAction={editImageAction}
+                        successfullyUpdated={successfullyUpdated}/>
             {currentState.showWindow ? (
-                    <ImagesWindow onClose={closeImageWindow} successfullyUpdated={successfullyUpdated}/>)
+                    <ImagesWindow onClose={closeImageWindow} successfullyUpdated={successfullyUpdated}
+                                  imageToShow={newState.imageToShow}
+                                  axiosMethodToCall={newState.imageToShow == null ? axios.put : axios.post}/>)
                 : null}
         </RightPanel>
 
