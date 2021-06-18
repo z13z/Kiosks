@@ -76,3 +76,7 @@ func writeAnyErrorResponse(w *http.ResponseWriter, err error, errorCode int, err
 		log.Print(err)
 	}
 }
+
+type DeleteRequest struct {
+	RowId int64 `json:"rowId"`
+}

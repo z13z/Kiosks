@@ -130,10 +130,6 @@ type usersListResponse struct {
 	RowsCount int                `json:"rowsCount"`
 }
 
-type DeleteRequest struct {
-	RowId int64 `json:"rowId"`
-}
-
 type RequestUserDAO struct {
 	Id          int64    `json:"id"`
 	Name        string   `json:"name"`

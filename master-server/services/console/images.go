@@ -38,15 +38,34 @@ func (ImageServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		getImagesList(&w, r)
 	case "POST":
-		//todo implement
-		//editImage(&w, r)
+		editImage(&w, r)
 	case "PUT":
 		addImage(&w, r)
 	case "DELETE":
-		//todo implement
-		//deleteImage()
+		deleteImage(&w, r)
 	default:
 		writeWrongHttpMethodResponse(&w, r.Method)
+	}
+}
+
+func deleteImage(w *http.ResponseWriter, r *http.Request) {
+	buffer := new(bytes.Buffer)
+	_, err := buffer.ReadFrom(r.Body)
+	readBytes := buffer.Bytes()
+	if err != nil {
+		writeServerErrorResponse(w, err)
+		return
+	}
+	requestUser := DeleteRequest{}
+	err = json.Unmarshal(readBytes, &requestUser)
+	if err != nil {
+		writeBadRequestError(w, fmt.Sprintf("Can't unmarshal Image from json [%s]", string(readBytes)))
+	}
+	err = imagesBean.DeleteImage(requestUser.RowId)
+	if err != nil {
+		writeBadRequestError(w, string(readBytes))
+	} else {
+		(*w).WriteHeader(http.StatusAccepted)
 	}
 }
 
@@ -71,10 +90,9 @@ func addOrEditImage(w *http.ResponseWriter, r *http.Request, methodToCall func(e
 	}
 }
 
-//todo zaza uncomment
-//func editImage(w *http.ResponseWriter, r *http.Request) {
-//	addOrEditImage(w, r, imagesBean.EditImage)
-//}
+func editImage(w *http.ResponseWriter, r *http.Request) {
+	addOrEditImage(w, r, imagesBean.EditImage)
+}
 
 func addImage(w *http.ResponseWriter, r *http.Request) {
 	addOrEditImage(w, r, imagesBean.AddImage)

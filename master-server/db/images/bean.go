@@ -53,6 +53,7 @@ func (bean *Bean) GetImage(id int) *ImageEntity {
 }
 
 func (bean *Bean) EditImage(entity *ImageEntity) error {
+	entity.State = "created"
 	updated := bean.connector.UpdateObjectInDb(entity)
 	if updated != 1 {
 		return fmt.Errorf("image with id [%d] doesn't exist in database", entity.Id)
@@ -66,6 +67,13 @@ func (bean *Bean) AddImage(entity *ImageEntity) error {
 	updated := bean.connector.InsertObjectInDb(entity)
 	if !updated {
 		return fmt.Errorf("image with name [%s] exists exist in database", entity.Name)
+	}
+	return nil
+}
+
+func (bean *Bean) DeleteImage(id int64) error {
+	if !bean.connector.DeleteObjectInDb(&ImageEntity{Id: id}) {
+		return fmt.Errorf("image with id [%d] doesn't in database", id)
 	}
 	return nil
 }
