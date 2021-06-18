@@ -1,6 +1,7 @@
 package images
 
 import (
+	"bytes"
 	"github.com/go-co-op/gocron"
 	"github.com/z13z/Kiosks/master-server/db/images"
 	"log"
@@ -9,14 +10,12 @@ import (
 	"time"
 )
 
-//todo zaza
-//const mustBuildImageState = "waiting"
-const mustBuildImageState = ""
+const mustBuildImageState = "waiting"
 const imageDoneState = "done"
 const imageBuildingState = "building"
 const imageFailedState = "failed"
 const batchSize = 2
-const jobIntervalSecs = 60
+const jobIntervalSecs = 300
 const kiosksImagesScriptsDirectoryName = "kiosk-image"
 const kiosksImagesDirectory = "kiosk-image-result"
 const buildOutputFileName = "output.txt"
@@ -38,22 +37,26 @@ func BuildImagesJob() {
 
 func downloadUbuntuImage() error {
 	err := RestoreAsset(".", "kiosk-image/download_ubuntu_image")
+	_ = os.Chmod("kiosk-image", 0777)
+	_ = os.Chmod("kiosk-image/download_ubuntu_image", 0777)
+
 	if err != nil {
 		return err
 	}
+	// if command is not in pass call fails :)
 	e := exec.Command("./kiosk-image/download_ubuntu_image")
-	_, err = os.Create(buildOutputFileName)
-	_, err = os.Create(buildErrorFileName)
-	closeFile := func(errorFile *os.File) {
-		_ = errorFile.Close()
-	}
-	outputFile, _ := os.Open(buildOutputFileName)
-	defer closeFile(outputFile)
-	errorFile, _ := os.Open(buildErrorFileName)
-	defer closeFile(errorFile)
-	e.Stdout = outputFile
-	e.Stderr = errorFile
+	var outBuf, errBuf bytes.Buffer
+	e.Stdout = &outBuf
+	e.Stderr = &errBuf
 	err = e.Run()
+	errB := writeBufferToFile(&outBuf, buildOutputFileName)
+	if errB != nil {
+		log.Print("Error while writing buffer in: "+buildOutputFileName, errB)
+	}
+	errB = writeBufferToFile(&errBuf, buildErrorFileName)
+	if errB != nil {
+		log.Print("Error while writing buffer in: "+buildErrorFileName, errB)
+	}
 	return err
 }
 
@@ -103,9 +106,30 @@ func runMakeIsoScript(image *images.ImageEntity) error {
 	e := exec.Command("make")
 	e.Dir = kiosksImagesDirectory + "/" + image.Name + "/" + kiosksImagesScriptsDirectoryName
 	imageDir := kiosksImagesDirectory + "/" + image.Name
-	e.Stdout, _ = os.Open(imageDir + "/" + buildOutputFileName)
-	e.Stderr, _ = os.Open(imageDir + "/" + buildErrorFileName)
+	var outBuf, errBuf bytes.Buffer
+	e.Stdout = &outBuf
+	e.Stderr = &errBuf
 	err = e.Run()
+	errB := writeBufferToFile(&outBuf, imageDir+"/"+buildOutputFileName)
+	if errB != nil {
+		log.Print("Error while writing buffer in: "+imageDir+"/"+buildOutputFileName, errB)
+	}
+	errB = writeBufferToFile(&errBuf, imageDir+"/"+buildErrorFileName)
+	if errB != nil {
+		log.Print("Error while writing buffer in: "+imageDir+"/"+buildErrorFileName, errB)
+	}
+	return err
+}
+
+func writeBufferToFile(w *bytes.Buffer, fileName string) error {
+	f, err := os.Create(fileName)
+	if err != nil {
+		return err
+	}
+	defer func(f *os.File) {
+		_ = f.Close()
+	}(f)
+	_, err = f.Write(w.Bytes())
 	return err
 }
 
@@ -123,14 +147,6 @@ func createDirectoryAndLogFilesForKioskImage(image *images.ImageEntity) error {
 		return err
 	}
 	err = os.Mkdir(imageDir, 0755)
-	if err != nil {
-		return err
-	}
-	_, err = os.Create(imageDir + "/" + buildOutputFileName)
-	if err != nil {
-		return err
-	}
-	_, err = os.Create(imageDir + "/" + buildErrorFileName)
 	if err != nil {
 		return err
 	}

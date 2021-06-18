@@ -11,6 +11,6 @@ clean:
 
 images/${BASE_UBUNTU_IMAGE_NAME}:
 	mkdir -p images
-	cp ../../../*.iso ${BASE_UBUNTU_IMAGE_VERSION}
+	cp ../../../*.iso $@
 
 .PHONY: build
