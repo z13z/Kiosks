@@ -11,7 +11,7 @@ import (
 const serviceAddress = ":8080"
 
 func main() {
-	images.BuildImagesJob()
+	go images.BuildImagesJob()
 	startServices()
 }
 

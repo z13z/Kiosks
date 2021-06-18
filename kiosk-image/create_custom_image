@@ -1,5 +1,6 @@
 #!/bin/sh
 #Script is made from documentation https://help.ubuntu.com/community/LiveCDCustomization
+echo "create custom image" && \
 BASE_IMAGE_NAME=$1 &&\
 IMAGE_NAME=Kiosk &&\
 sudo apt install -y squashfs-tools genisoimage &&\
@@ -36,7 +37,7 @@ cd extract-cd &&\
 sudo rm md5sum.txt &&\
 find -type f -print0 | sudo xargs -0 md5sum | grep -v isolinux/boot.cat | sudo tee md5sum.txt &&\
 echo the ISO image &&\
-sudo mkisofs -D -r -V "$IMAGE_NAME" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o ../ubuntu-9.04.1-desktop-i386-custom.iso . &&\
+sudo mkisofs -D -r -V "$IMAGE_NAME" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o ../ubuntu-20.04.2-server-custom.iso . &&\
 cd ..
 umount mnt &&\
 rm -r mnt &&\

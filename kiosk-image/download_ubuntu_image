@@ -1,0 +1,6 @@
+#!/bin/bash
+BASE_UBUNTU_IMAGE_NAME=ubuntu-20.04.2-live-server-amd64.iso
+rm -rf $BASE_UBUNTU_IMAGE_NAME
+rm -rf output.txt
+rm -rf error.txt
+curl "https://releases.ubuntu.com/${BASE_UBUNTU_IMAGE_VERSION}/${BASE_UBUNTU_IMAGE_NAME}" > "${BASE_UBUNTU_IMAGE_VERSION}"

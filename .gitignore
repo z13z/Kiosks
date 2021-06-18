@@ -3,3 +3,4 @@
 /.idea
 /master-console/.idea/
 /master-server/pkg/mod/
+/kiosk-image-scripts/
