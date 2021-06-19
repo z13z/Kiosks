@@ -4,7 +4,8 @@ import axios from "axios";
 import {JWT_TOKEN_KEY} from "../../../Constants";
 import {Button} from "reactstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faEdit, faPlay, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faDownload, faEdit, faPlay, faTrash} from "@fortawesome/free-solid-svg-icons";
+import fileDownload from 'js-file-download';
 
 class ImagesGrid extends Grid {
 
@@ -13,7 +14,7 @@ class ImagesGrid extends Grid {
     }
 
     getActionColumnsHeader() {
-        return ["build", "edit", "delete"]
+        return ["download", "build", "edit", "delete"]
     }
 
     getSearchProps() {
@@ -72,7 +73,19 @@ class ImagesGrid extends Grid {
         })
     }
 
+    // used code from https://github.com/kennethjiang/js-file-download
+    downloadKioskImage(imageName) {
+        axios.get('/imageDownload', {
+            params: {name: imageName},
+            headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)},
+            responseType: 'blob',
+        }).then(res => {
+            fileDownload(res.data, imageName + ".iso");
+        });
+    }
+
     getActionColumns(row) {
+        console.log(process.env)
         return (
             <>
                 <td key={row.id + "_build"} className="GridColumn" style={{width: '41px'}}>
@@ -80,6 +93,12 @@ class ImagesGrid extends Grid {
                             disabled={row.state !== 'created'}>
                         <FontAwesomeIcon icon={faPlay}
                                          onClick={() => this.buildImageAction(row)}/>
+                    </Button>
+                </td>
+                <td key={row.id + "_download"} className="GridColumn" style={{width: '41px'}}>
+                    <Button style={row.state !== 'done' ? {opacity: '30%'} : null}
+                            disabled={row.state !== 'done'} onClick={() => this.downloadKioskImage(row.name)}>
+                        <FontAwesomeIcon icon={faDownload}/>
                     </Button>
                 </td>
                 <td key={row.id + "_edit"} className="GridColumn" style={{width: '41px'}}>
