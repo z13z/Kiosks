@@ -23,7 +23,7 @@ func getIntFromQuery(param []string) (int, bool) {
 	return 0, false
 }
 
-func writeBytesInResponse(w *http.ResponseWriter, mustWrite *[]byte) {
+func WriteBytesInResponse(w *http.ResponseWriter, mustWrite *[]byte) {
 	mustWriteLen := len(*mustWrite)
 	writtenBytes, err := (*w).Write(*mustWrite)
 	if err != nil {
@@ -41,7 +41,7 @@ func writeBytesInResponse(w *http.ResponseWriter, mustWrite *[]byte) {
 func writeJsonInResponse(w *http.ResponseWriter, data string) {
 	(*w).WriteHeader(http.StatusOK)
 	mustWrite := []byte(data)
-	writeBytesInResponse(w, &mustWrite)
+	WriteBytesInResponse(w, &mustWrite)
 }
 
 func writeUnauthorizedError(w *http.ResponseWriter) {
@@ -71,7 +71,7 @@ func writeBadRequestErrorResponse(w *http.ResponseWriter, err error) {
 func writeAnyErrorResponse(w *http.ResponseWriter, err error, errorCode int, errorMessage string) {
 	(*w).WriteHeader(errorCode)
 	mustWrite := []byte(errorMessage)
-	writeBytesInResponse(w, &mustWrite)
+	WriteBytesInResponse(w, &mustWrite)
 	if err != nil {
 		log.Print(err)
 	}

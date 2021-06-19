@@ -14,9 +14,9 @@ CREATE TABLE KioskImage
 CREATE TABLE Kiosk
 (
     id             BIGINT GENERATED ALWAYS AS IDENTITY,
-    name           VARCHAR(128) NOT NULL,
+    address        VARCHAR(64) NOT NULL,
     kiosk_image_id BIGINT,
-    create_time    TIMESTAMP    NOT NULL,
+    last_online    TIMESTAMP   NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fkIdKioskImage_id FOREIGN KEY (kiosk_image_id) REFERENCES KioskImage (id)
 );

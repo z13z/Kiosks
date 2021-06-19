@@ -22,7 +22,7 @@ func (ImageDownloadServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Requ
 		if err != nil {
 			writeServerErrorResponse(&w, err)
 		} else {
-			writeBytesInResponse(&w, &response)
+			WriteBytesInResponse(&w, &response)
 		}
 	} else {
 		writeWrongHttpMethodResponse(&w, r.Method)

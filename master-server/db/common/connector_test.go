@@ -106,7 +106,7 @@ func TestDBConnector_InsertObjectInDb(t *testing.T) {
 			connector := &DBConnector{
 				pool: tt.fields.pool,
 			}
-			if got := connector.InsertObjectInDb(tt.args.entity); got != tt.want {
+			if _, got := connector.InsertObjectInDb(tt.args.entity); got != tt.want {
 				t.Errorf("InsertObjectInDb() = %v, want %v", got, tt.want)
 			}
 		})

@@ -54,11 +54,11 @@ func downloadUbuntuImage() error {
 	err = e.Run()
 	errB := writeBufferToFile(&outBuf, buildOutputFileName)
 	if errB != nil {
-		log.Print("Error while writing buffer in: "+buildOutputFileName, errB)
+		log.Print("Error while writing buffer in: "+buildOutputFileName+": ", errB)
 	}
 	errB = writeBufferToFile(&errBuf, buildErrorFileName)
 	if errB != nil {
-		log.Print("Error while writing buffer in: "+buildErrorFileName, errB)
+		log.Print("Error while writing buffer in: "+buildErrorFileName+": ", errB)
 	}
 	return err
 }
@@ -97,7 +97,7 @@ func setImageState(image *images.ImageEntity, bean *images.Bean, state string) b
 	image.State = state
 	err := bean.EditImage(image)
 	if err != nil {
-		log.Print("error occurred while setting image state to "+state, err)
+		log.Print("error occurred while setting image state to "+state+": ", err)
 		return false
 	}
 	return true
@@ -118,11 +118,11 @@ func runMakeIsoScript(image *images.ImageEntity) error {
 	err = e.Run()
 	errB := writeBufferToFile(&outBuf, imageDir+"/"+buildOutputFileName)
 	if errB != nil {
-		log.Print("Error while writing buffer in: "+imageDir+"/"+buildOutputFileName, errB)
+		log.Print("Error while writing buffer in: "+imageDir+"/"+buildOutputFileName+": ", errB)
 	}
 	errB = writeBufferToFile(&errBuf, imageDir+"/"+buildErrorFileName)
 	if errB != nil {
-		log.Print("Error while writing buffer in: "+imageDir+"/"+buildErrorFileName, errB)
+		log.Print("Error while writing buffer in: "+imageDir+"/"+buildErrorFileName+": ", errB)
 	}
 	return err
 }
@@ -131,22 +131,22 @@ func deleteImageBuildFiles(imageName string) {
 	imageDir := KiosksImagesDirectory + "/" + imageName
 	err := os.Remove(imageDir + "/kiosk-image/Makefile")
 	if err != nil {
-		log.Print(fmt.Sprintf("Error while deleting image build script (%s)", imageDir+"/kiosk-image/Makefile"), err)
+		log.Print(fmt.Sprintf("Error while deleting image build script (%s)", imageDir+"/kiosk-image/Makefile: "), err)
 	}
 
 	err = os.Remove(imageDir + "/kiosk-image/create_custom_image")
 	if err != nil {
-		log.Print(fmt.Sprintf("Error while deleting image build script (%s)", imageDir+"/kiosk-image/create_custom_image"), err)
+		log.Print(fmt.Sprintf("Error while deleting image build script (%s)", imageDir+"/kiosk-image/create_custom_image: "), err)
 	}
 
 	err = os.Remove(imageDir + "/kiosk-image/chroot_commands")
 	if err != nil {
-		log.Print(fmt.Sprintf("Error while deleting image build script (%s)", imageDir+"/kiosk-image/create_custom_image"), err)
+		log.Print(fmt.Sprintf("Error while deleting image build script (%s)", imageDir+"/kiosk-image/create_custom_image: "), err)
 	}
 
 	err = os.Remove(imageDir + "/kiosk-image/prepare_kiosk")
 	if err != nil {
-		log.Print(fmt.Sprintf("Error while deleting image build script (%s)", imageDir+"/kiosk-image/prepare_kiosk"), err)
+		log.Print(fmt.Sprintf("Error while deleting image build script (%s)", imageDir+"/kiosk-image/prepare_kiosk: "), err)
 	}
 }
 

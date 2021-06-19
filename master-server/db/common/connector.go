@@ -127,7 +127,7 @@ func (connector *DBConnector) UpdateObjectInDb(entity IEntity) int64 {
 	return updatedCount
 }
 
-func (connector *DBConnector) InsertObjectInDb(entity IEntity) bool {
+func (connector *DBConnector) InsertObjectInDb(entity IEntity) (int64, bool) {
 	fieldNamesString := strings.Join(*(entity).GetEditableFieldNames(), ",")
 	fieldValuesHoldersString := ""
 	for ind := range *(entity).GetEditableFieldNames() {
@@ -138,21 +138,24 @@ func (connector *DBConnector) InsertObjectInDb(entity IEntity) bool {
 	}
 
 	fieldValueHolders := *(entity).GetEditableFieldValueHolders()
-	result, err := connector.pool.Exec(fmt.Sprintf("INSERT INTO %s(%s) VALUES (%s)", (entity).GetTableName(),
-		fieldNamesString, fieldValuesHoldersString), fieldValueHolders...)
+	sqlStr := fmt.Sprintf("INSERT INTO %s(%s) VALUES (%s) RETURNING id", (entity).GetTableName(),
+		fieldNamesString, fieldValuesHoldersString)
+	statement, err := connector.pool.Prepare(sqlStr)
+	if err != nil {
+		log.Print("Error while inserting object: ", err)
+		return 0, false
+	}
+	var resultIdToReturn int64
+	err = statement.QueryRow(fieldValueHolders...).Scan(&resultIdToReturn)
 	if err != nil {
 		if err.(*pq.Error).Code.Name() == "unique_violation" {
 			log.Print(err)
-			return false
+			return 0, false
 		} else {
 			log.Fatal(err)
 		}
 	}
-	updatedCount, err := result.RowsAffected()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return updatedCount == 1
+	return resultIdToReturn, true
 }
 
 func (connector *DBConnector) getRowsCountFromDb(tableName string, wherePart *string, wherePartValues *[]interface{}) int {

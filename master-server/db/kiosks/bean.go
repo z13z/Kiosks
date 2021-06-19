@@ -1,8 +1,10 @@
 package kiosks
 
 import (
+	"fmt"
 	"github.com/z13z/Kiosks/master-server/db/common"
 	"strconv"
+	"time"
 )
 
 type Bean struct {
@@ -48,4 +50,18 @@ func (bean *Bean) GetKiosk(id int) *KioskEntity {
 		return &((*resultFromDb)[0])
 	}
 	return nil
+}
+
+func (bean *Bean) AddKiosk(kioskImageId int64, kioskAddress string) (*KioskEntity, error) {
+	kiosk := KioskEntity{
+		KioskImageId: kioskImageId,
+		Address:      kioskAddress,
+		LastOnline:   time.Now(),
+	}
+	idToReturn, ok := bean.connector.InsertObjectInDb(&kiosk)
+	if !ok {
+		return nil, fmt.Errorf("kiosk wasn't saved in db")
+	}
+	kiosk.Id = idToReturn
+	return &kiosk, nil
 }

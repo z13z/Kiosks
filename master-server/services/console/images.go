@@ -22,7 +22,7 @@ func (DefaultImageScriptServiceHandler) ServeHTTP(w http.ResponseWriter, r *http
 		if err != nil {
 			writeServerErrorResponse(&w, err)
 		} else {
-			writeBytesInResponse(&w, &response)
+			WriteBytesInResponse(&w, &response)
 		}
 	} else {
 		writeWrongHttpMethodResponse(&w, r.Method)
@@ -135,7 +135,7 @@ func getImagesList(w *http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err.Error())
 	}
-	writeBytesInResponse(w, &mustWrite)
+	WriteBytesInResponse(w, &mustWrite)
 }
 
 type imagesListResponse struct {

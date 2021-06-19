@@ -63,7 +63,7 @@ func (bean *Bean) EditUser(entity *UserEntity) error {
 
 func (bean *Bean) AddUser(entity *UserEntity) error {
 	entity.Password = bean.GetPassword(entity.Password)
-	updated := bean.connector.InsertObjectInDb(entity)
+	_, updated := bean.connector.InsertObjectInDb(entity)
 	if !updated {
 		return fmt.Errorf("user with id [%d] exists in database", entity.Id)
 	}

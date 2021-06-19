@@ -69,7 +69,7 @@ func (bean *Bean) EditImage(entity *ImageEntity) error {
 func (bean *Bean) AddImage(entity *ImageEntity) error {
 	entity.State = "created"
 	entity.CreateTime = time.Now()
-	updated := bean.connector.InsertObjectInDb(entity)
+	_, updated := bean.connector.InsertObjectInDb(entity)
 	if !updated {
 		return fmt.Errorf("image with name [%s] exists exist in database", entity.Name)
 	}

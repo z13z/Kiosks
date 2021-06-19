@@ -32,7 +32,7 @@ func (KiosksServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		errorMessage := "{\"message\": \"not found\"}"
 		mustWrite := []byte(errorMessage)
-		writeBytesInResponse(&w, &mustWrite)
+		WriteBytesInResponse(&w, &mustWrite)
 	}
 }
 
@@ -67,7 +67,7 @@ func getKiosksList(w *http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err.Error())
 	}
-	writeBytesInResponse(w, &mustWrite)
+	WriteBytesInResponse(w, &mustWrite)
 }
 
 type kiosksListResponse struct {

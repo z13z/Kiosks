@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/lib/pq"
 	"github.com/z13z/Kiosks/master-server/db/users"
+	"log"
 	"math"
 	"net/http"
 	"strings"
@@ -120,9 +121,9 @@ func getUsersList(w *http.ResponseWriter, r *http.Request) {
 		mustWrite, err = json.Marshal(response)
 	}
 	if err != nil {
-		panic(err.Error())
+		log.Print("Error while Getting users list: ", err)
 	}
-	writeBytesInResponse(w, &mustWrite)
+	WriteBytesInResponse(w, &mustWrite)
 }
 
 type usersListResponse struct {

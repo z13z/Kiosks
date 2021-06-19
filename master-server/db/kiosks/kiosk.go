@@ -7,44 +7,44 @@ import (
 
 type KioskEntity struct {
 	Id           int64     `json:"id"`
-	Name         string    `json:"name"`
+	Address      string    `json:"address"`
 	KioskImageId int64     `json:"kioskImageId"`
-	CreateTime   time.Time `json:"createTime"`
+	LastOnline   time.Time `json:"lastOnline"`
 }
 
 func (kiosk *KioskEntity) SetEntityFields(fields map[string]interface{}) {
 	idValue := fields["id"]
-	nameValue := fields["name"]
+	address := fields["address"]
 	kioskImageIdValue := fields["kiosk_image_id"]
-	createTime := fields["create_time"]
+	lastOnline := fields["last_online"]
 	kiosk.Id = *idValue.(*int64)
-	kiosk.Name = *nameValue.(*string)
+	kiosk.Address = *address.(*string)
 	kiosk.KioskImageId = *kioskImageIdValue.(*int64)
-	kiosk.CreateTime = *createTime.(*time.Time)
+	kiosk.LastOnline = *lastOnline.(*time.Time)
 }
 
-func (*KioskEntity) GetTableName() string {
+func (kiosk *KioskEntity) GetTableName() string {
 	return "Kiosk"
 }
 
-func (*KioskEntity) GetFieldNames() *[]string {
-	return &[]string{"id", "name", "kiosk_image_id", "create_time"}
+func (kiosk *KioskEntity) GetFieldNames() *[]string {
+	return &[]string{"id", "address", "kiosk_image_id", "last_online"}
 }
 
 func (kiosk *KioskEntity) GetFieldValueHolders() *[]interface{} {
-	return &([]interface{}{&kiosk.Id, &kiosk.Name, &kiosk.KioskImageId, &kiosk.CreateTime})
+	return &([]interface{}{&kiosk.Id, &kiosk.Address, &kiosk.KioskImageId, &kiosk.LastOnline})
 }
 
-func (*KioskEntity) NewEntity() common.IEntity {
+func (kiosk *KioskEntity) NewEntity() common.IEntity {
 	return new(KioskEntity)
 }
 
 func (kiosk *KioskEntity) GetEditableFieldValueHolders() *[]interface{} {
-	return &([]interface{}{&kiosk.Id, &kiosk.Name, &kiosk.KioskImageId, &kiosk.CreateTime})
+	return &([]interface{}{&kiosk.Address, &kiosk.KioskImageId, &kiosk.LastOnline})
 }
 
 func (kiosk *KioskEntity) GetEditableFieldNames() *[]string {
-	return &[]string{"name", "kiosk_image_id", "create_time"}
+	return &[]string{"address", "kiosk_image_id", "last_online"}
 }
 
 func (kiosk *KioskEntity) GetId() int64 {
