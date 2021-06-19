@@ -23,6 +23,7 @@ func startServices() {
 	http.Handle("/users", console.UserServiceHandler{})
 	http.Handle("/defaultScript", console.DefaultImageScriptServiceHandler{})
 	http.Handle("/login", console.LoginServiceHandler{})
+	http.Handle("/imageDownload", console.ImageDownloadServiceHandler{})
 	log.Print("Server started")
 	log.Fatal(http.ListenAndServe(serviceAddress, nil))
 }

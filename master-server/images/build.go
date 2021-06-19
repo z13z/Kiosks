@@ -11,14 +11,16 @@ import (
 	"time"
 )
 
+const OutputFileName = "ubuntu-20.04.2-server-custom.iso"
+const OutputFileDir = "build"
+const KiosksImagesDirectory = "kiosk-image-result"
+const KiosksImagesScriptsDirectoryName = "kiosk-image"
 const mustBuildImageState = "waiting"
 const imageDoneState = "done"
 const imageBuildingState = "building"
 const imageFailedState = "failed"
 const batchSize = 2
 const jobIntervalMins = 10 * batchSize
-const kiosksImagesScriptsDirectoryName = "kiosk-image"
-const kiosksImagesDirectory = "kiosk-image-result"
 const buildOutputFileName = "output.txt"
 const buildErrorFileName = "error.txt"
 
@@ -108,8 +110,8 @@ func runMakeIsoScript(image *images.ImageEntity) error {
 		return err
 	}
 	e := exec.Command("make")
-	e.Dir = kiosksImagesDirectory + "/" + image.Name + "/" + kiosksImagesScriptsDirectoryName
-	imageDir := kiosksImagesDirectory + "/" + image.Name
+	e.Dir = KiosksImagesDirectory + "/" + image.Name + "/" + KiosksImagesScriptsDirectoryName
+	imageDir := KiosksImagesDirectory + "/" + image.Name
 	var outBuf, errBuf bytes.Buffer
 	e.Stdout = &outBuf
 	e.Stderr = &errBuf
@@ -126,7 +128,7 @@ func runMakeIsoScript(image *images.ImageEntity) error {
 }
 
 func deleteImageBuildFiles(imageName string) {
-	imageDir := kiosksImagesDirectory + "/" + imageName
+	imageDir := KiosksImagesDirectory + "/" + imageName
 	err := os.Remove(imageDir + "/kiosk-image/Makefile")
 	if err != nil {
 		log.Print(fmt.Sprintf("Error while deleting image build script (%s)", imageDir+"/kiosk-image/Makefile"), err)
@@ -164,8 +166,8 @@ func writeBufferToFile(w *bytes.Buffer, fileName string) error {
 // 2) mkdir for kiosk image directory (remove before if exists).
 // 3) copy build scripts to kiosk image directory.
 func createDirectoryAndLogFilesForKioskImage(image *images.ImageEntity) error {
-	imageDir := kiosksImagesDirectory + "/" + image.Name
-	err := os.Mkdir(kiosksImagesDirectory, 0755)
+	imageDir := KiosksImagesDirectory + "/" + image.Name
+	err := os.Mkdir(KiosksImagesDirectory, 0755)
 	if err != nil && !os.IsExist(err) {
 		return err
 	}
