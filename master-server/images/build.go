@@ -2,6 +2,7 @@ package images
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/go-co-op/gocron"
 	"github.com/z13z/Kiosks/master-server/db/images"
 	"log"
@@ -15,7 +16,7 @@ const imageDoneState = "done"
 const imageBuildingState = "building"
 const imageFailedState = "failed"
 const batchSize = 2
-const jobIntervalSecs = 300
+const jobIntervalMins = 10 * batchSize
 const kiosksImagesScriptsDirectoryName = "kiosk-image"
 const kiosksImagesDirectory = "kiosk-image-result"
 const buildOutputFileName = "output.txt"
@@ -28,7 +29,7 @@ func BuildImagesJob() {
 	}
 	imagesBean := images.NewBean()
 	scheduler := gocron.NewScheduler(time.UTC)
-	_, err = scheduler.Every(jobIntervalSecs).Minutes().Do(buildImagesJobRun, imagesBean)
+	_, err = scheduler.Every(jobIntervalMins).Minutes().Do(buildImagesJobRun, imagesBean)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -76,6 +77,8 @@ func buildImagesJobRun(imagesBean *images.Bean) {
 }
 
 func buildImage(image *images.ImageEntity, bean *images.Bean) {
+	log.Printf("Starging build of image (%s)", image.Name)
+	defer log.Printf("Finished build of image (%s)", image.Name)
 	if !setImageState(image, bean, imageBuildingState) {
 		return
 	}
@@ -100,6 +103,7 @@ func setImageState(image *images.ImageEntity, bean *images.Bean, state string) b
 
 func runMakeIsoScript(image *images.ImageEntity) error {
 	err := createDirectoryAndLogFilesForKioskImage(image)
+	defer deleteImageBuildFiles(image.Name)
 	if err != nil {
 		return err
 	}
@@ -119,6 +123,29 @@ func runMakeIsoScript(image *images.ImageEntity) error {
 		log.Print("Error while writing buffer in: "+imageDir+"/"+buildErrorFileName, errB)
 	}
 	return err
+}
+
+func deleteImageBuildFiles(imageName string) {
+	imageDir := kiosksImagesDirectory + "/" + imageName
+	err := os.Remove(imageDir + "/kiosk-image/Makefile")
+	if err != nil {
+		log.Print(fmt.Sprintf("Error while deleting image build script (%s)", imageDir+"/kiosk-image/Makefile"), err)
+	}
+
+	err = os.Remove(imageDir + "/kiosk-image/create_custom_image")
+	if err != nil {
+		log.Print(fmt.Sprintf("Error while deleting image build script (%s)", imageDir+"/kiosk-image/create_custom_image"), err)
+	}
+
+	err = os.Remove(imageDir + "/kiosk-image/chroot_commands")
+	if err != nil {
+		log.Print(fmt.Sprintf("Error while deleting image build script (%s)", imageDir+"/kiosk-image/create_custom_image"), err)
+	}
+
+	err = os.Remove(imageDir + "/kiosk-image/prepare_kiosk")
+	if err != nil {
+		log.Print(fmt.Sprintf("Error while deleting image build script (%s)", imageDir+"/kiosk-image/prepare_kiosk"), err)
+	}
 }
 
 func writeBufferToFile(w *bytes.Buffer, fileName string) error {

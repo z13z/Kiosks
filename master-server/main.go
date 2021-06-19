@@ -5,12 +5,14 @@ import (
 	"github.com/z13z/Kiosks/master-server/services/console"
 	"log"
 	"net/http"
+	"os"
 )
 
 //todo zaza move to configuration
 const serviceAddress = ":8080"
 
 func main() {
+	log.SetOutput(os.Stdout)
 	go images.BuildImagesJob()
 	startServices()
 }
@@ -21,5 +23,6 @@ func startServices() {
 	http.Handle("/users", console.UserServiceHandler{})
 	http.Handle("/defaultScript", console.DefaultImageScriptServiceHandler{})
 	http.Handle("/login", console.LoginServiceHandler{})
+	log.Print("Server started")
 	log.Fatal(http.ListenAndServe(serviceAddress, nil))
 }
