@@ -6,7 +6,6 @@ from flask import request
 import common
 import configs
 import flask
-import ip_provider
 
 import controller
 
