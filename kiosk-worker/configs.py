@@ -9,6 +9,7 @@ import logging
 import ip_provider
 
 SERVER_ADDRESS = "http://{}:8080".format(os.getenv("KIOSK_SERVER", "localhost"))
+KIOSK_IMAGE_ID = os.getenv("KIOSK_IMAGE_ID")
 CONNECTOR_SERVICE_ADDRESS = "/kiosksConnector"
 CONFIG_FILE_NAME = "kiosk_config.json"
 SERVICE_PASSWORD_LENGTH = 16
@@ -25,7 +26,7 @@ def call_create_method():
     possible_chars = string.ascii_letters + string.digits
     password_plaintext = "".join(random.choices(possible_chars, k=SERVICE_PASSWORD_LENGTH))
     response = requests.put(SERVER_ADDRESS + CONNECTOR_SERVICE_ADDRESS,
-                            json={"kioskImageId": 1,
+                            json={"kioskImageId": int(KIOSK_IMAGE_ID),
                                   "kioskAddress": ip_provider.get_ip() + ":" + CONTROLLER_SERVICE_PORT,
                                   "servicePassword": password_plaintext})
     must_save_config = None
