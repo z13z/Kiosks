@@ -1,28 +1,37 @@
-#!/usr/bin/python3
+#!/bin/python3
 # pip install requests
+# pip install Flask
+# sudo apt install -y scrot
+from flask import request
+import common
+import configs
+import flask
 
-import requests
-import os.path
-import logging
+import controller
 
-SERVER_ADDRESS = "http://localhost:8080"
-CONNECTOR_SERVICE_ADDRESS = "/kiosksConnector"
-CONFIG_FILE_NAME = "kiosk_config.json"
+api = flask.Flask(__name__)
 
-
-def call_create_method():
-    response = requests.put(SERVER_ADDRESS + CONNECTOR_SERVICE_ADDRESS,
-                            json={"kioskImageId": 1, "kioskAddress": "localhost:10013"})
-    f = open(CONFIG_FILE_NAME, "w")
-    logging.info("Got config from server: " + response.json())
-    f.write(response.json())
-    f.close()
+AUTHENTICATION_HEADER = 'Authentication'
 
 
-def config_file_exists():
-    return os.path.isfile(CONFIG_FILE_NAME)
+def check_authentication():
+    if AUTHENTICATION_HEADER in request.headers:
+        auth_header = request.headers[AUTHENTICATION_HEADER]
+        return common.get_sha256(auth_header) == servicePassword
+    return False
+
+
+@api.route("/screenshot")
+def get_screenshot():
+    if not check_authentication():
+        return "Unauthorized", 401
+    return controller.get_screenshot(), 200
 
 
 if __name__ == '__main__':
-    if not config_file_exists():
-        call_create_method()
+    global kioskId, serverPassword, servicePassword
+    if not configs.config_file_exists():
+        kioskId, serverPassword, servicePassword = configs.call_create_method()
+    else:
+        kioskId, serverPassword, servicePassword = configs.load_configs_from_file()
+    api.run()
