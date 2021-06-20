@@ -21,7 +21,7 @@ def get_public_ip():
 
 
 def get_ip():
-    if os.getenv(LOCAL_IP_ENV_KEY) is not None:
+    if os.getenv(LOCAL_IP_ENV_KEY) is not None and os.getenv(LOCAL_IP_ENV_KEY) == "true":
         return get_local_ip()
     else:
         return get_public_ip()
