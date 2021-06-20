@@ -4,3 +4,5 @@
 /master-console/.idea/
 /master-server/pkg/mod/
 /kiosk-image-scripts/
+/kiosk-worker/venv/
+/kiosk-worker/.idea/

@@ -41,7 +41,7 @@ func addKiosk(w *http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Print("Problem while creating new kiosk: ", err)
-		(*w).WriteHeader(http.StatusInternalServerError)
+		(*w).WriteHeader(http.StatusBadRequest)
 		return
 	}
 	jwtToken, err := crypto.GetJwtForKiosk(kiosk.GetId())

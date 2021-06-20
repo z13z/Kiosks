@@ -148,7 +148,8 @@ func (connector *DBConnector) InsertObjectInDb(entity IEntity) (int64, bool) {
 	var resultIdToReturn int64
 	err = statement.QueryRow(fieldValueHolders...).Scan(&resultIdToReturn)
 	if err != nil {
-		if err.(*pq.Error).Code.Name() == "unique_violation" {
+		_, ok := err.(*pq.Error)
+		if ok {
 			log.Print(err)
 			return 0, false
 		} else {
