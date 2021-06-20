@@ -52,11 +52,12 @@ func (bean *Bean) GetKiosk(id int) *KioskEntity {
 	return nil
 }
 
-func (bean *Bean) AddKiosk(kioskImageId int64, kioskAddress string) (*KioskEntity, error) {
+func (bean *Bean) AddKiosk(kioskImageId int64, kioskAddress string, password []byte) (*KioskEntity, error) {
 	kiosk := KioskEntity{
-		KioskImageId: kioskImageId,
-		Address:      kioskAddress,
-		LastOnline:   time.Now(),
+		KioskImageId:    kioskImageId,
+		Address:         kioskAddress,
+		LastOnline:      time.Now(),
+		ServicePassword: password,
 	}
 	idToReturn, ok := bean.connector.InsertObjectInDb(&kiosk)
 	if !ok {

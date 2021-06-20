@@ -9,7 +9,7 @@ import (
 )
 
 //todo zaza
-var signatureKey = []byte("changeIt")
+var signatureKey = []byte("changeItChangeIt")
 var durationForKey, _ = time.ParseDuration("1h")
 
 type KioskUserClaims struct {

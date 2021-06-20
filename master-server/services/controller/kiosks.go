@@ -35,7 +35,7 @@ func addKiosk(w *http.ResponseWriter, r *http.Request) {
 	request := KioskCreateRequest{}
 	err = json.Unmarshal(readBytes, &request)
 
-	kiosk, err := kiosksBean.AddKiosk(request.KioskImageId, request.KioskAddress)
+	kiosk, err := kiosksBean.AddKiosk(request.KioskImageId, request.KioskAddress, crypto.Encrypt(request.ServicePassword))
 	kioskStr, _ := json.Marshal(kiosk)
 	log.Printf("Created kiosk (%s)", kioskStr)
 
@@ -63,8 +63,9 @@ func addKiosk(w *http.ResponseWriter, r *http.Request) {
 }
 
 type KioskCreateRequest struct {
-	KioskImageId int64  `json:"kioskImageId"`
-	KioskAddress string `json:"kioskAddress"`
+	KioskImageId    int64  `json:"kioskImageId"`
+	KioskAddress    string `json:"kioskAddress"`
+	ServicePassword string `json:"servicePassword"`
 }
 
 type KioskCreateResponse struct {

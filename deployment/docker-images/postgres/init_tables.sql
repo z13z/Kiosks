@@ -17,6 +17,7 @@ CREATE TABLE Kiosk
     address        VARCHAR(64) NOT NULL,
     kiosk_image_id BIGINT,
     last_online    TIMESTAMP   NOT NULL,
+    service_password bytea NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fkIdKioskImage_id FOREIGN KEY (kiosk_image_id) REFERENCES KioskImage (id)
 );

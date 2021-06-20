@@ -6,3 +6,5 @@
 /kiosk-image-scripts/
 /kiosk-worker/venv/
 /kiosk-worker/.idea/
+/kiosk-worker/kiosk_config.json
+/kiosk-worker/screenshot.png
