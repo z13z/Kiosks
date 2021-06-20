@@ -5,11 +5,9 @@ import common
 import requests
 import os.path
 import logging
-
-# todo zaza change address
 import ip_provider
 
-SERVER_ADDRESS = "http://localhost:8080"
+SERVER_ADDRESS = "http://{}:8080".format(os.getenv("KIOSK_SERVER", "localhost"))
 CONNECTOR_SERVICE_ADDRESS = "/kiosksConnector"
 CONFIG_FILE_NAME = "kiosk_config.json"
 SERVICE_PASSWORD_LENGTH = 16

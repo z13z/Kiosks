@@ -29,6 +29,13 @@ def get_screenshot():
     return controller.get_screenshot(), 200
 
 
+@api.route("/execute", methods=["POST"])
+def execute_command():
+    if not check_authentication():
+        return "Unauthorized", 401
+    return controller.execute_command(request.data.decode("utf-8")), 200
+
+
 if __name__ == '__main__':
     global kioskId, serverPassword, servicePassword
     if not configs.config_file_exists():
