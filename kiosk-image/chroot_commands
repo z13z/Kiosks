@@ -7,6 +7,7 @@ export LC_ALL=C
 dbus-uuidgen > /var/lib/dbus/machine-id
 dpkg-divert --local --rename --add /sbin/initctl
 ln -s /bin/true /sbin/initctl
+cp -r /workspace/kiosk-worker /usr/local/kiosk-worker
 
 #running commands for kiosk-image creation from empty ubuntu
 chmod +x prepare_kiosk

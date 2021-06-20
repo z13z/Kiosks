@@ -5,7 +5,11 @@ sudo apt install -y libegl1-mesa libegl1 && \
 sudo apt install -y xwayland && \
 sudo apt install -y xdotool && \
 sudo apt install -y mingetty && \
-sudo apt install -y firefox && \
+sudo apt install -y scrot && \
+sudo apt install -y python3-pip && \
+sudo pip install requests && \
+sudo pip install Flask && \
+${CUSTOM_SCRIPTS_TO_RUN} && \
 sudo mkdir /etc/systemd/system/getty@tty1.service.d && \
 sudo useradd -m -G sudo --shell /bin/bash kiosk && \
 sudo passwd kiosk<<EOF
@@ -19,6 +23,7 @@ ExecStart=
 ExecStart=-/sbin/agetty --noissue --autologin kiosk %I \$TERM
 Type=idle
 EOF
+sudo echo -en "\nKIOSK_SERVER=\"${SERVER_IP_ADDRESS}\"\nKIOSK_IMAGE_ID=${KIOSK_IMAGE_ID}\nLOCAL_MACHINE=${LOCAL_MACHINE}\nKIOSK_APP_NAME=\"${KIOSK_APP_NAME}\"">>/etc/environment && \
 sudo cat >/etc/systemd/system/kiosk.service<<EOF
 [Unit]
 Description=Mount unit Kiosk
@@ -40,10 +45,9 @@ set -m && export XDG_RUNTIME_DIR=/run/user/1000 && sleep 13 && \
 (sudo snap get mir-kiosk &>/dev/null || sudo snap install mir-kiosk --devmode) && \
 (/snap/bin/mir-kiosk &>/dev/null &) && sleep 8 && export DISPLAY=:1 && \
 (Xwayland -wr \$DISPLAY &>/dev/null &) && sleep 8
-export app_name=firefox
-echo "starting \${app_name}"
-(sleep 13 && xdotool windowsize \$(xdotool search --onlyvisible --name \$app_name) 100% 100%) &
-\$app_name
+echo "starting \${KIOSK_APP_NAME}"
+(sleep 13 && xdotool windowsize \$(xdotool search --onlyvisible --name \KIOSK_APP_NAME) 100% 100%) &
+\KIOSK_APP_NAME
 EOF
 sudo chmod 777 /usr/local/bin/kiosk.sh && \
 sudo systemctl enable kiosk.service

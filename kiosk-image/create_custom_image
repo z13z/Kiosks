@@ -1,6 +1,9 @@
 #!/bin/sh
 #Script is made from documentation https://help.ubuntu.com/community/LiveCDCustomization
+#todo zaza for local set custom SERVER_IP_ADDRESS
 echo "create custom image" && \
+sudo apt install -y curl && \
+export SERVER_IP_ADDRESS="$(curl https://api.ipify.org/ 2>/dev/null)" && \
 BASE_IMAGE_NAME=$1 &&\
 IMAGE_NAME=Kiosk &&\
 sudo apt install -y squashfs-tools genisoimage &&\
@@ -17,8 +20,14 @@ sudo cp /etc/resolv.conf edit/etc/ &&\
 sudo mount -o bind /run/ edit/run &&\
 sudo mount --bind /dev/ edit/dev &&\
 sudo mkdir edit/workspace &&\
+sudo mkdir edit/workspace/kiosk-worker &&\
 scp ../prepare_kiosk edit/workspace &&\
 scp ../chroot_commands edit/workspace &&\
+scp ../../kiosk-worker/common.py edit/workspace/kiosk-worker &&\
+scp ../../kiosk-worker/configs.py edit/workspace/kiosk-worker &&\
+scp ../../kiosk-worker/controller.py edit/workspace/kiosk-worker &&\
+scp ../../kiosk-worker/ip_provider.py edit/workspace/kiosk-worker &&\
+scp ../../kiosk-worker/main.py edit/workspace/kiosk-worker &&\
 sudo chmod +w extract-cd/casper/filesystem.manifest &&\
 sudo chroot edit /workspace/chroot_commands &&\
 echo Producing the CD image &&\
