@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/z13z/Kiosks/master-server/images"
 	"github.com/z13z/Kiosks/master-server/services/console"
-	"github.com/z13z/Kiosks/master-server/services/controller"
 	"log"
 	"net/http"
 	"os"
@@ -25,7 +24,7 @@ func startServices() {
 	http.Handle("/defaultScript", console.DefaultImageScriptServiceHandler{})
 	http.Handle("/login", console.LoginServiceHandler{})
 	http.Handle("/imageDownload", console.ImageDownloadServiceHandler{})
-	http.Handle("/kiosksConnector", controller.KiosksConnectorServiceHandler{})
+	http.Handle("/kiosksConnector", console.KioskConnectorServiceHandler{})
 	log.Print("Server started")
 	log.Fatal(http.ListenAndServe(serviceAddress, nil))
 }

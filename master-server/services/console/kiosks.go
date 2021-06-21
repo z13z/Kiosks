@@ -3,6 +3,7 @@ package console
 import (
 	"encoding/json"
 	"github.com/z13z/Kiosks/master-server/db/kiosks"
+	"log"
 	"math"
 	"net/http"
 )
@@ -19,15 +20,6 @@ func (KiosksServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		getKiosksList(&w, r)
-	case "POST":
-		//todo implement
-		//editKiosk(w, r)
-	case "PUT":
-		//todo implement
-		//addKiosk(w, r)
-	case "DELETE":
-		//todo implement
-		//deleteKiosk()
 	default:
 		w.WriteHeader(http.StatusNotFound)
 		errorMessage := "{\"message\": \"not found\"}"
@@ -65,8 +57,9 @@ func getKiosksList(w *http.ResponseWriter, r *http.Request) {
 		mustWrite, err = json.Marshal(response)
 	}
 	if err != nil {
-		panic(err.Error())
+		log.Fatal(err)
 	}
+	(*w).WriteHeader(http.StatusOK)
 	WriteBytesInResponse(w, &mustWrite)
 }
 
