@@ -31,12 +31,12 @@ func (KiosksServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func getKiosksList(w *http.ResponseWriter, r *http.Request) {
 	var found bool
 	kioskId, _ := getIntFromQuery(r.URL.Query()["id"])
-	kioskNameParam := r.URL.Query()["name"]
-	var kioskName string
-	if kioskNameParam != nil && len(kioskNameParam) > 0 {
-		kioskName = kioskNameParam[0]
+	kioskAddressParam := r.URL.Query()["address"]
+	var kioskAddress string
+	if kioskAddressParam != nil && len(kioskAddressParam) > 0 {
+		kioskAddress = kioskAddressParam[0]
 	} else {
-		kioskName = ""
+		kioskAddress = ""
 	}
 	oneKiosk := getBooleanFromQuery(r.URL.Query()["oneKiosk"])
 	offset, found := getIntFromQuery(r.URL.Query()["offset"])
@@ -52,8 +52,8 @@ func getKiosksList(w *http.ResponseWriter, r *http.Request) {
 	if oneKiosk {
 		mustWrite, err = json.Marshal(*kiosksBean.GetKiosk(kioskId))
 	} else {
-		response := kiosksListResponse{Rows: *kiosksBean.GetKiosks(kioskId, kioskName, offset, limit),
-			RowsCount: kiosksBean.GetKiosksCount(kioskId, kioskName)}
+		response := kiosksListResponse{Rows: *kiosksBean.GetKiosks(kioskId, kioskAddress, offset, limit),
+			RowsCount: kiosksBean.GetKiosksCount(kioskId, kioskAddress)}
 		mustWrite, err = json.Marshal(response)
 	}
 	if err != nil {

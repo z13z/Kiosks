@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 )
 
 //goland:noinspection HttpUrlsUsage
@@ -17,9 +18,10 @@ const kioskScreenshotServiceAddressTemplate = "http://%s/screenshot"
 const kioskExecuteServiceAddressTemplate = "http://%s/execute"
 const KioskImageScreenshotContentType = "image/png"
 const authenticationHeader = "Authentication"
+const callTimeoutValue = 4 * time.Second
 
 func sendRequestToKiosk(entity *kiosks.KioskEntity, method, address string, body io.Reader) ([]byte, error) {
-	client := &http.Client{}
+	client := &http.Client{Timeout: callTimeoutValue}
 	req, err := http.NewRequest(method, address, body)
 	if err != nil {
 		return nil, err

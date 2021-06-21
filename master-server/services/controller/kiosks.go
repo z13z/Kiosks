@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"github.com/z13z/Kiosks/master-server/crypto"
 	"github.com/z13z/Kiosks/master-server/db/kiosks"
-	"github.com/z13z/Kiosks/master-server/services/console"
 	"log"
 	"net/http"
 	"strconv"
@@ -58,8 +57,23 @@ func addKiosk(w *http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	console.WriteBytesInResponse(w, &responseStr)
+	writeBytesInResponse(w, &responseStr)
 	(*w).WriteHeader(http.StatusAccepted)
+}
+
+func writeBytesInResponse(w *http.ResponseWriter, mustWrite *[]byte) {
+	mustWriteLen := len(*mustWrite)
+	writtenBytes, err := (*w).Write(*mustWrite)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for writtenBytes < mustWriteLen {
+		curWrittenBytes, err := (*w).Write((*mustWrite)[writtenBytes:])
+		writtenBytes += curWrittenBytes
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
 
 type KioskCreateRequest struct {

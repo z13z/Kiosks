@@ -41,4 +41,4 @@ if __name__ == '__main__':
         kioskId, serverPassword, servicePassword = configs.call_create_method()
     else:
         kioskId, serverPassword, servicePassword = configs.load_configs_from_file()
-    api.run()
+    api.run(host="0.0.0.0", port=5000)

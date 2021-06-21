@@ -81,6 +81,7 @@ func addOrEditImage(w *http.ResponseWriter, r *http.Request, methodToCall func(e
 	err = json.Unmarshal(readBytes, &entity)
 	if err != nil {
 		writeBadRequestError(w, fmt.Sprintf("Can't unmarshal Image from json [%s]", string(readBytes)))
+		return
 	}
 	err = methodToCall(&entity)
 	if err != nil {

@@ -3,11 +3,14 @@ import './KiosksPage.css'
 import RightPanel from "../common/RightPanel/RightPanel"
 import SearchPanel from "../common/SearchPanel/SearchPanel"
 import KiosksGrid from "./KiosksGrid";
+import KioskCommandWindow from "../../windows/kiosks/KioskCommandWindow";
 
 const KiosksPage = () => {
     const [currentState, setCurrentState] = useState({
         kioskId: "",
-        kioskName: ""
+        kioskName: "",
+        showWindow: false,
+        kioskForCommand: null
     });
 
     let newState = {...currentState}
@@ -22,6 +25,18 @@ const KiosksPage = () => {
 
     const updateState = () => {
         setCurrentState(newState)
+    }
+
+    const closeCommandWindow = () => {
+        newState.showWindow = false
+        newState.kioskForCommand = null
+        updateState()
+    }
+
+    const sendCommandAction = (id) => {
+        newState.showWindow = true
+        newState.kioskForCommand = id
+        updateState()
     }
 
     return (
@@ -39,7 +54,10 @@ const KiosksPage = () => {
                 </label>
                 <button key="kioskSearchButton" onClick={updateState}>search</button>
             </SearchPanel>
-            <KiosksGrid id={currentState.kioskId} name={currentState.kioskName}/>
+            <KiosksGrid id={currentState.kioskId} name={currentState.kioskName} sendCommandAction={sendCommandAction}/>
+            {currentState.showWindow ? (
+                <KioskCommandWindow onClose={closeCommandWindow} kioskForCommand={currentState.kioskForCommand}/>
+            ) : null}
         </RightPanel>
 
     )

@@ -17,13 +17,13 @@ func NewBean() *Bean {
 	return &newBean
 }
 
-func (bean *Bean) GetKiosks(id int, name string, offset, limit int) *[]KioskEntity {
+func (bean *Bean) GetKiosks(id int, kioskAddress string, offset, limit int) *[]KioskEntity {
 	queryParams := make(map[string]string)
 	if id != 0 {
 		queryParams["id"] = strconv.Itoa(id)
 	}
-	if name != "" {
-		queryParams["name"] = name
+	if kioskAddress != "" {
+		queryParams["address"] = kioskAddress
 	}
 	resultFromDb := bean.connector.GetObjectsFromDb(&KioskEntity{}, &queryParams, offset, limit)
 	var resultKiosks []KioskEntity
@@ -33,13 +33,13 @@ func (bean *Bean) GetKiosks(id int, name string, offset, limit int) *[]KioskEnti
 	return &resultKiosks
 }
 
-func (bean *Bean) GetKiosksCount(id int, name string) int {
+func (bean *Bean) GetKiosksCount(id int, kioskAddress string) int {
 	queryParams := make(map[string]string)
 	if id != 0 {
 		queryParams["id"] = strconv.Itoa(id)
 	}
-	if name != "" {
-		queryParams["name"] = name
+	if kioskAddress != "" {
+		queryParams["address"] = kioskAddress
 	}
 	return bean.connector.GetObjectsCountFromDb(&KioskEntity{}, &queryParams)
 }
