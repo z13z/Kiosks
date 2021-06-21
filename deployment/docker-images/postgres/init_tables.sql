@@ -3,21 +3,23 @@ CREATE TYPE KioskUserPermission AS ENUM ('users', 'images', 'kiosks');
 
 CREATE TABLE KioskImage
 (
-    id          BIGINT GENERATED ALWAYS AS IDENTITY,
-    name        VARCHAR(128) UNIQUE NOT NULL,
-    create_time TIMESTAMP           NOT NULL,
-    script      VARCHAR             NOT NULL,
-    state       KioskImageState,
+    id            BIGINT GENERATED ALWAYS AS IDENTITY,
+    name          VARCHAR(128) UNIQUE NOT NULL,
+    create_time   TIMESTAMP           NOT NULL,
+    script        VARCHAR             NOT NULL,
+    application   VARCHAR(128)        NOT NULL,
+    local_machine BOOLEAN             NOT NULL,
+    state         KioskImageState,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE Kiosk
 (
-    id             BIGINT GENERATED ALWAYS AS IDENTITY,
-    address        VARCHAR(64) NOT NULL,
-    kiosk_image_id BIGINT,
-    last_online    TIMESTAMP   NOT NULL,
-    service_password bytea NOT NULL,
+    id               BIGINT GENERATED ALWAYS AS IDENTITY,
+    address          VARCHAR(64) NOT NULL,
+    kiosk_image_id   BIGINT,
+    last_online      TIMESTAMP   NOT NULL,
+    service_password bytea       NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fkIdKioskImage_id FOREIGN KEY (kiosk_image_id) REFERENCES KioskImage (id)
 );

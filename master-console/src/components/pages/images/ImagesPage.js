@@ -36,6 +36,7 @@ const ImagesPage = () => {
 
     const closeImageWindow = () => {
         newState.showWindow = false
+        newState.imageToShow = null
         updateState()
     }
 
@@ -44,12 +45,14 @@ const ImagesPage = () => {
         closeImageWindow()
     }
 
-    const editImageAction = (id, username, permissions) => {
+    const editImageAction = (id, username, permissions, application, localMachine) => {
         newState.showWindow = true
         newState.imageToShow = {
             id: id,
             name: username,
-            script: permissions
+            script: permissions,
+            application: application,
+            localMachine: localMachine,
         }
         updateState()
     }

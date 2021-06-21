@@ -1,6 +1,5 @@
 #!/bin/bash
 sudo apt update && \
-sudo apt upgrade -y && \
 sudo apt install -y libegl1-mesa libegl1 && \
 sudo apt install -y xwayland && \
 sudo apt install -y xdotool && \
@@ -10,7 +9,6 @@ sudo apt install -y sed && \
 sudo apt install -y python3-pip && \
 sudo pip install requests && \
 sudo pip install Flask && \
-${CUSTOM_SCRIPTS_TO_RUN} && \
 sudo mkdir /etc/systemd/system/getty@tty1.service.d && \
 sudo useradd -m -G sudo --shell /bin/bash kiosk && \
 sudo passwd kiosk<<EOF
@@ -39,10 +37,11 @@ RestartSec=3
 [Install]
 WantedBy=default.target
 EOF
-sudo sed -i "s/APPLICATION_NAME_PLACEHOLDER/${KIOSK_APP_NAME}/g" /etc/systemd/system/kiosk.service && \
+sudo sed -i "s|APPLICATION_NAME_PLACEHOLDER|${KIOSK_APP_NAME}|g" /etc/systemd/system/kiosk.service && \
 sudo chmod 664 /etc/systemd/system/kiosk.service && \
 sudo cat >/usr/local/bin/kiosk.sh<<EOF
 #!/bin/bash
+CUSTOM_SCRIPTS_TO_RUN_PLACEHOLDER && \
 set -m && export XDG_RUNTIME_DIR=/run/user/1000 && sleep 13 && \
 (sudo snap get mir-kiosk &>/dev/null || sudo snap install mir-kiosk --devmode) && \
 (/snap/bin/mir-kiosk &>/dev/null &) && sleep 8 && export DISPLAY=:1 && \
@@ -51,6 +50,7 @@ echo "starting \${KIOSK_APP_NAME}"
 (sleep 13 && xdotool windowsize \$(xdotool search --onlyvisible --name \${KIOSK_APP_NAME}) 100% 100%) &
 \${KIOSK_APP_NAME}
 EOF
+sudo sed -i "s|CUSTOM_SCRIPTS_TO_RUN_PLACEHOLDER|${CUSTOM_SCRIPTS_TO_RUN}|g" /usr/local/bin/kiosk.sh && \
 sudo chmod 777 /usr/local/bin/kiosk.sh && \
 sudo systemctl enable kiosk.service && \
 sudo cat >/etc/systemd/system/kiosk_worker.service<<EOF

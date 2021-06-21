@@ -6,6 +6,8 @@ import {JWT_TOKEN_KEY} from '../../../Constants'
 const ImagesWindow = (props) => {
     const [imageName, setImageName] = useState(props.imageToShow !== null ? props.imageToShow.name : "")
     const [imageScript, setImageScript] = useState(props.imageToShow !== null ? props.imageToShow.script : "")
+    const [imageApplication, setImageApplication] = useState(props.imageToShow !== null ? props.imageToShow.application : "")
+    const [imageLocalMachine, setImageLocalMachine] = useState(props.imageToShow !== null ? props.imageToShow.localMachine : "")
 
     const onSubmitAction = () => {
         let queryParams = {}
@@ -15,6 +17,8 @@ const ImagesWindow = (props) => {
         queryParams['name'] = imageName
         queryParams['script'] = imageScript
         queryParams['state'] = "created"
+        queryParams['application'] = imageApplication
+        queryParams['localMachine'] = imageLocalMachine
 
         props.axiosMethodToCall('/image', queryParams, {headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)}}).then(() => {
             props.successfullyUpdated()
@@ -39,6 +43,12 @@ const ImagesWindow = (props) => {
     const onImageScriptChange = (event) => {
         setImageScript(event.target.value)
     }
+    const onImageApplicationChange = (event) => {
+        setImageApplication(event.target.value)
+    }
+    const onImageLocalMachineChange = (event) => {
+        setImageLocalMachine(event.target.checked)
+    }
 
     const fieldStyle = {float: 'right'}
 
@@ -48,6 +58,16 @@ const ImagesWindow = (props) => {
                 <Label for="imageNameField">Name</Label>
                 <Input type="text" name="imageName" id="imageNameField" value={imageName} onChange={onImageNameChange}
                        style={fieldStyle} required/>
+            </FormGroup>
+            <FormGroup key='imageApplicationGroupKey'>
+                <Label for="imageApplicationField">Application</Label>
+                <Input type="text" name="imageApplication" id="imageApplicationField" value={imageApplication} onChange={onImageApplicationChange}
+                       style={fieldStyle} required/>
+            </FormGroup>
+            <FormGroup key='imageLocalMachineGroupKey'>
+                <Label for="imageLocalMachineField">Local Machine</Label>
+                <Input type="checkbox" name="imageLocalMachine" id="imageLocalMachineField" value={imageLocalMachine} onChange={onImageLocalMachineChange}
+                       style={fieldStyle}/>
             </FormGroup>
             <FormGroup key='imageScriptFieldKey'>
                 <Label for="imageScriptField">Script</Label>

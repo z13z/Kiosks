@@ -5,9 +5,13 @@ import (
 	"fmt"
 	"github.com/go-co-op/gocron"
 	"github.com/z13z/Kiosks/master-server/db/images"
+	"github.com/z13z/Kiosks/master-server/images/builder"
+	"github.com/z13z/Kiosks/master-server/images/worker"
 	"log"
 	"os"
 	"os/exec"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -39,7 +43,7 @@ func BuildImagesJob() {
 }
 
 func downloadUbuntuImage() error {
-	err := RestoreAsset(".", "kiosk-image/download_ubuntu_image")
+	err := builder.RestoreAsset(".", "kiosk-image/download_ubuntu_image")
 	_ = os.Chmod("kiosk-image", 0777)
 	_ = os.Chmod("kiosk-image/download_ubuntu_image", 0777)
 
@@ -64,10 +68,15 @@ func downloadUbuntuImage() error {
 }
 
 func exportKioskBuildScriptsInDir(directory string) error {
-	err := RestoreAsset(directory, "kiosk-image/Makefile")
-	err = RestoreAsset(directory, "kiosk-image/create_custom_image")
-	err = RestoreAsset(directory, "kiosk-image/chroot_commands")
-	err = RestoreAsset(directory, "kiosk-image/prepare_kiosk")
+	err := builder.RestoreAsset(directory, "kiosk-image/Makefile")
+	err = builder.RestoreAsset(directory, "kiosk-image/create_custom_image")
+	err = builder.RestoreAsset(directory, "kiosk-image/chroot_commands")
+	err = builder.RestoreAsset(directory, "kiosk-image/prepare_kiosk")
+	err = worker.RestoreAsset(directory, "kiosk-worker/common.py")
+	err = worker.RestoreAsset(directory, "kiosk-worker/configs.py")
+	err = worker.RestoreAsset(directory, "kiosk-worker/controller.py")
+	err = worker.RestoreAsset(directory, "kiosk-worker/ip_provider.py")
+	err = worker.RestoreAsset(directory, "kiosk-worker/main.py")
 	return err
 }
 
@@ -111,6 +120,11 @@ func runMakeIsoScript(image *images.ImageEntity) error {
 	}
 	e := exec.Command("make")
 	e.Dir = KiosksImagesDirectory + "/" + image.Name + "/" + KiosksImagesScriptsDirectoryName
+	e.Env = append(os.Environ(),
+		"KIOSK_IMAGE_ID="+strconv.FormatInt(image.Id, 10),
+		"LOCAL_MACHINE="+strconv.FormatBool(image.LocalMachine),
+		"CUSTOM_SCRIPTS_TO_RUN="+strings.ReplaceAll(image.Script, "\n", " && "),
+		"KIOSK_APP_NAME="+image.Application)
 	imageDir := KiosksImagesDirectory + "/" + image.Name
 	var outBuf, errBuf bytes.Buffer
 	e.Stdout = &outBuf
@@ -147,6 +161,11 @@ func deleteImageBuildFiles(imageName string) {
 	err = os.Remove(imageDir + "/kiosk-image/prepare_kiosk")
 	if err != nil {
 		log.Print(fmt.Sprintf("Error while deleting image build script (%s)", imageDir+"/kiosk-image/prepare_kiosk: "), err)
+	}
+
+	err = os.RemoveAll(imageDir + "/kiosk-worker")
+	if err != nil {
+		log.Print(fmt.Sprintf("Error while deleting image build directory (%s)", imageDir+"/kiosk-worker: "), err)
 	}
 }
 

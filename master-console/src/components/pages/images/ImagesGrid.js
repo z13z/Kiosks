@@ -10,7 +10,7 @@ import fileDownload from 'js-file-download';
 class ImagesGrid extends Grid {
 
     getColumns() {
-        return ["id", "name", "state"]
+        return ["id", "name", "state", "application", "localMachine"]
     }
 
     getActionColumnsHeader() {
@@ -31,6 +31,8 @@ class ImagesGrid extends Grid {
         queryParams['name'] = row.name
         queryParams['script'] = row.script
         queryParams['state'] = "waiting"
+        queryParams['application'] = row.application
+        queryParams['localMachine'] = row.localMachine
 
         axios.post('/image', queryParams, {headers: {'Authentication': localStorage.getItem(JWT_TOKEN_KEY)}}).then(() => {
             this.props.successfullyUpdated()
@@ -85,7 +87,6 @@ class ImagesGrid extends Grid {
     }
 
     getActionColumns(row) {
-        console.log(process.env)
         return (
             <>
                 <td key={row.id + "_build"} className="GridColumn" style={{width: '41px'}}>
@@ -104,7 +105,7 @@ class ImagesGrid extends Grid {
                 <td key={row.id + "_edit"} className="GridColumn" style={{width: '41px'}}>
                     <Button>
                         <FontAwesomeIcon icon={faEdit}
-                                         onClick={() => this.props.editImageAction(row.id, row.name, row.script)}/>
+                                         onClick={() => this.props.editImageAction(row.id, row.name, row.script, row.application, row.localMachine)}/>
                     </Button>
                 </td>
                 <td key={row.id + "_delete"} className="GridColumn" style={{width: '41px'}}>

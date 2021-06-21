@@ -15,7 +15,7 @@ ln -s /bin/true /sbin/initctl
 cp -r /workspace/kiosk-worker /usr/local/kiosk-worker
 
 #running commands for kiosk-image creation from empty ubuntu
-chmod +x prepare_kiosk
+chmod +x /workspace/prepare_kiosk
 . /workspace/prepare_kiosk
 
 apt clean
