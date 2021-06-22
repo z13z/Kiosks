@@ -3,6 +3,7 @@ package controller
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/z13z/Kiosks/master-server/crypto"
 	"github.com/z13z/Kiosks/master-server/db/kiosks"
 	"log"
@@ -13,6 +14,7 @@ import (
 type KiosksConnectorServiceHandler struct{}
 
 const authenticationHeaderKey = "Authentication"
+const fromIpHeaderKey = "X-From-Ip"
 
 var kiosksBean = kiosks.NewBean()
 
@@ -28,14 +30,20 @@ func (KiosksConnectorServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Re
 
 func updateLastOnlineTime(w *http.ResponseWriter, r *http.Request) {
 	authenticationToken := r.Header.Get(authenticationHeaderKey)
+	fromIp := r.Header.Get(fromIpHeaderKey)
 	claims, ok := crypto.CheckJwtForUser(authenticationToken)
 	if !ok {
 		log.Print("Update last online Time called without authorization header")
 		writeUnauthorizedError(w)
 		return
 	}
+	if fromIp == "" {
+		log.Printf("Missing %s header", fromIpHeaderKey)
+		writeBadRequestErrorResponse(w, fmt.Errorf("missing %s header", fromIpHeaderKey))
+		return
+	}
 
-	ok = kiosksBean.UpdateLastUpdateTimeForKiosk(claims.Id)
+	ok = kiosksBean.UpdateLastUpdateTimeForKiosk(claims.Id, fromIp)
 	if !ok {
 		log.Printf("Problem updating last online time for kiosk, id (%s): ", claims.Id)
 		(*w).WriteHeader(http.StatusInternalServerError)
@@ -81,6 +89,10 @@ func addKiosk(w *http.ResponseWriter, r *http.Request) {
 
 	(*w).WriteHeader(http.StatusCreated)
 	writeBytesInResponse(w, &responseStr)
+}
+
+func writeBadRequestErrorResponse(w *http.ResponseWriter, err error) {
+	writeAnyErrorResponse(w, err, http.StatusBadRequest, "{\"message\": \"bad request\"}")
 }
 
 func writeUnauthorizedError(w *http.ResponseWriter) {

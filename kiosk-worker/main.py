@@ -43,5 +43,5 @@ if __name__ == '__main__':
         kioskId, serverPassword, servicePassword = configs.call_create_method(CONTROLLER_SERVICE_PORT)
     else:
         kioskId, serverPassword, servicePassword = configs.load_configs_from_file()
-    alive.start_status_update_worker(serverPassword)
+    alive.start_status_update_worker(serverPassword, CONTROLLER_SERVICE_PORT)
     api.run(host="0.0.0.0", port=CONTROLLER_SERVICE_PORT)

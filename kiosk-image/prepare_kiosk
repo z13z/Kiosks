@@ -6,6 +6,7 @@ sudo apt install -y xdotool && \
 sudo apt install -y mingetty && \
 sudo apt install -y scrot && \
 sudo apt install -y sed && \
+sudo apt install -y firewalld && \
 sudo apt install -y python3-pip && \
 sudo pip install requests && \
 sudo pip install Flask && \
@@ -43,6 +44,7 @@ sudo chmod 664 /etc/systemd/system/kiosk.service && \
 sudo cat >/usr/local/bin/kiosk.sh<<EOF
 #!/bin/bash
 CUSTOM_SCRIPTS_TO_RUN_PLACEHOLDER && \
+sudo firewall-cmd --permanent --add-port 5000/tcp && \
 set -m && export XDG_RUNTIME_DIR=/run/user/1000 && sleep 13 && \
 (sudo snap get mir-kiosk &>/dev/null || sudo snap install mir-kiosk --devmode) && \
 (/snap/bin/mir-kiosk &>/dev/null &) && sleep 8 && export DISPLAY=:1 && \
