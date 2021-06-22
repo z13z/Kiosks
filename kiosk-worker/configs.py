@@ -13,7 +13,6 @@ KIOSK_IMAGE_ID = os.getenv("KIOSK_IMAGE_ID")
 CONNECTOR_SERVICE_ADDRESS = "/kiosksConnector"
 CONFIG_FILE_NAME = "kiosk_config.json"
 SERVICE_PASSWORD_LENGTH = 16
-CONTROLLER_SERVICE_PORT = "5000"
 
 
 def get_config_variables_from_json(configs):
@@ -22,15 +21,15 @@ def get_config_variables_from_json(configs):
     return configs["id"], configs["password"], configs["servicePassword"]
 
 
-def call_create_method():
+def call_create_method(controller_service_port):
     possible_chars = string.ascii_letters + string.digits
     password_plaintext = "".join(random.choices(possible_chars, k=SERVICE_PASSWORD_LENGTH))
     response = requests.put(SERVER_ADDRESS + CONNECTOR_SERVICE_ADDRESS,
                             json={"kioskImageId": int(KIOSK_IMAGE_ID),
-                                  "kioskAddress": ip_provider.get_ip() + ":" + CONTROLLER_SERVICE_PORT,
+                                  "kioskAddress": ip_provider.get_ip() + ":" + str(controller_service_port),
                                   "servicePassword": password_plaintext})
     must_save_config = None
-    if response.status_code == 200:
+    if response.status_code == 201:
         f = open(CONFIG_FILE_NAME, "w")
         must_save_config = response.json()
         logging.info("Got config from server: " + str(must_save_config))

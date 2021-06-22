@@ -8,10 +8,12 @@ import configs
 import flask
 
 import controller
+import alive
 
 api = flask.Flask(__name__)
 
 AUTHENTICATION_HEADER = 'Authentication'
+CONTROLLER_SERVICE_PORT = 5000
 
 
 def check_authentication():
@@ -38,7 +40,8 @@ def execute_command():
 if __name__ == '__main__':
     global kioskId, serverPassword, servicePassword
     if not configs.config_file_exists():
-        kioskId, serverPassword, servicePassword = configs.call_create_method()
+        kioskId, serverPassword, servicePassword = configs.call_create_method(CONTROLLER_SERVICE_PORT)
     else:
         kioskId, serverPassword, servicePassword = configs.load_configs_from_file()
-    api.run(host="0.0.0.0", port=5000)
+    alive.start_status_update_worker(serverPassword)
+    api.run(host="0.0.0.0", port=CONTROLLER_SERVICE_PORT)
