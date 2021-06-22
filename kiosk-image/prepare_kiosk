@@ -9,6 +9,7 @@ sudo apt install -y sed && \
 sudo apt install -y python3-pip && \
 sudo pip install requests && \
 sudo pip install Flask && \
+sudo pip install schedule && \
 sudo mkdir /etc/systemd/system/getty@tty1.service.d && \
 sudo useradd -m -G sudo --shell /bin/bash kiosk && \
 sudo passwd kiosk<<EOF

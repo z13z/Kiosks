@@ -66,3 +66,10 @@ func (bean *Bean) AddKiosk(kioskImageId int64, kioskAddress string, password []b
 	kiosk.Id = idToReturn
 	return &kiosk, nil
 }
+
+func (bean *Bean) UpdateLastUpdateTimeForKiosk(idStr string) bool {
+	id, _ := strconv.Atoi(idStr)
+	kiosk := bean.GetKiosk(id)
+	(*kiosk).LastOnline = time.Now()
+	return bean.connector.UpdateObjectInDb(kiosk) == 1
+}

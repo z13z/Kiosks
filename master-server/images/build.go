@@ -73,6 +73,7 @@ func exportKioskBuildScriptsInDir(directory string) error {
 	err = builder.RestoreAsset(directory, "kiosk-image/chroot_commands")
 	err = builder.RestoreAsset(directory, "kiosk-image/prepare_kiosk")
 	err = worker.RestoreAsset(directory, "kiosk-worker/common.py")
+	err = worker.RestoreAsset(directory, "kiosk-worker/alive.py")
 	err = worker.RestoreAsset(directory, "kiosk-worker/configs.py")
 	err = worker.RestoreAsset(directory, "kiosk-worker/controller.py")
 	err = worker.RestoreAsset(directory, "kiosk-worker/ip_provider.py")

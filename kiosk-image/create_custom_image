@@ -28,6 +28,7 @@ sudo mkdir edit/workspace/kiosk-worker &&\
 scp ../prepare_kiosk edit/workspace &&\
 scp ../chroot_commands edit/workspace &&\
 scp ../../kiosk-worker/common.py edit/workspace/kiosk-worker &&\
+scp ../../kiosk-worker/alive.py edit/workspace/kiosk-worker &&\
 scp ../../kiosk-worker/configs.py edit/workspace/kiosk-worker &&\
 scp ../../kiosk-worker/controller.py edit/workspace/kiosk-worker &&\
 scp ../../kiosk-worker/ip_provider.py edit/workspace/kiosk-worker &&\

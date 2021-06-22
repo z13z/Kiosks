@@ -12,6 +12,8 @@ import (
 
 type KiosksConnectorServiceHandler struct{}
 
+const authenticationHeaderKey = "Authentication"
+
 var kiosksBean = kiosks.NewBean()
 
 func (KiosksConnectorServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +21,27 @@ func (KiosksConnectorServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Re
 	switch r.Method {
 	case "PUT":
 		addKiosk(&w, r)
+	case "POST":
+		updateLastOnlineTime(&w, r)
 	}
+}
+
+func updateLastOnlineTime(w *http.ResponseWriter, r *http.Request) {
+	authenticationToken := r.Header.Get(authenticationHeaderKey)
+	claims, ok := crypto.CheckJwtForUser(authenticationToken)
+	if !ok {
+		log.Print("Update last online Time called without authorization header")
+		writeUnauthorizedError(w)
+		return
+	}
+
+	ok = kiosksBean.UpdateLastUpdateTimeForKiosk(claims.Id)
+	if !ok {
+		log.Printf("Problem updating last online time for kiosk, id (%s): ", claims.Id)
+		(*w).WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	(*w).WriteHeader(http.StatusAccepted)
 }
 
 func addKiosk(w *http.ResponseWriter, r *http.Request) {
@@ -57,8 +79,21 @@ func addKiosk(w *http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	(*w).WriteHeader(http.StatusCreated)
 	writeBytesInResponse(w, &responseStr)
-	(*w).WriteHeader(http.StatusAccepted)
+}
+
+func writeUnauthorizedError(w *http.ResponseWriter) {
+	writeAnyErrorResponse(w, nil, http.StatusUnauthorized, "{\"message\": \"unauthorized\"}")
+}
+
+func writeAnyErrorResponse(w *http.ResponseWriter, err error, errorCode int, errorMessage string) {
+	(*w).WriteHeader(errorCode)
+	mustWrite := []byte(errorMessage)
+	writeBytesInResponse(w, &mustWrite)
+	if err != nil {
+		log.Print(err)
+	}
 }
 
 func writeBytesInResponse(w *http.ResponseWriter, mustWrite *[]byte) {
