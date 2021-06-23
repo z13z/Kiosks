@@ -69,16 +69,6 @@ code {
   font-size: 1rem;
 }
 
-.LeftPanel{
-  width: max-content;
-  flex: 20%;
-}
-
-.NavigationList {
-  list-style-type: none;
-  padding-inline-start: 0;
-}
-
 .NavigationList > a > li{
   display: block;
   width: 100%;
@@ -147,10 +137,6 @@ code {
   color: lightblue;
 }
 
-.RightPanelDiv{
-  width: max-content;
-  flex: 80%;
-}
 
 .PaginationIcon {
   width: 24px;
@@ -227,4 +213,57 @@ code {
 
 #unameEmpty, #passEmpty, #noMatch {
   background-color: red;
+}
+
+.BaseContainer{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.BaseContainer{
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.BaseContainer .LogoDiv{
+  flex-direction: row;
+  flex-grow: 2;
+}
+
+.BaseContainer h1 {
+  font-size: 1.5rem;
+  padding-left: 1rem;
+  flex-grow: 2;
+}
+
+.LeftPanel{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+
+}
+
+.NavigationDiv  {
+  display: flex;
+  flex-direction: row;
+}
+
+.NavigationList {
+  min-width: 40vw;
+  list-style-type: none;
+  padding-inline-start: 0;
+  display: flex;
+  flex-direction: row;
+  padding-right: 2rem;
+  justify-content: space-evenly;
+}
+
+.NavigationList a {
+  flex-grow: 2;
 }
