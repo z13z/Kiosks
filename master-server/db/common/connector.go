@@ -6,6 +6,7 @@ import (
 	"github.com/lib/pq"
 	_ "github.com/lib/pq"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -19,7 +20,9 @@ const dbName = "kiosks"
 const dbDriverName = "postgres"
 const dbUser = "postgres"
 const dbPassword = "z13kiosks"
-const dbHost = "postgres-db"
+
+var dbHost = os.Getenv("DB_LOCATION")
+
 const dbPort = "5432"
 
 func NewDBConnector() *DBConnector {

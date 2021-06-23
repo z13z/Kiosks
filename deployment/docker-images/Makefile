@@ -1,7 +1,6 @@
 
 IMAGE_DIRECTORIES=\
- postgres\
- go-server
+ postgres
 
 
 default: $(IMAGE_DIRECTORIES)

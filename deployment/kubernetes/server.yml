@@ -1,63 +1,63 @@
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: master-server
-spec:
-  serviceName: "master-server"
-  replicas: 1
-  selector:
-    matchLabels:
-      app: master-server
-  template:
-    metadata:
-      labels:
-        app: master-server
-    spec:
-      containers:
-        - name: master-server
-          image: zaza13/kiosks/master-server:1.0
-          securityContext:
-            privileged: true
-          ports:
-            - containerPort: 8080
-          livenessProbe:
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            failureThreshold: 3
-            successThreshold: 1
-            timeoutSeconds: 5
-            tcpSocket:
-              port: 8080
-          resources:
-            limits:
-              cpu: 1000m
-              memory: 2Gi
-            requests:
-              cpu: 1000m
-              memory: 2Gi
-          volumeMounts:
-            - mountPath: /go/src/app
-              name: server-data
-  volumeClaimTemplates:
-    - metadata:
-        name: server-data
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: 15Gi
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: server-data
-spec:
-  ports:
-    - name: "8080"
-      port: 8080
-      protocol: TCP
-      targetPort: 8080
-  selector:
-    app: postgres-db
-  type: ClusterIP
+#apiVersion: apps/v1
+#kind: StatefulSet
+#metadata:
+#  name: master-server
+#spec:
+#  serviceName: "master-server"
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: master-server
+#  template:
+#    metadata:
+#      labels:
+#        app: master-server
+#    spec:
+#      containers:
+#        - name: master-server
+#          image: zaza13/kiosks/master-server:1.0
+#          securityContext:
+#            privileged: true
+#          ports:
+#            - containerPort: 8080
+#          livenessProbe:
+#            initialDelaySeconds: 60
+#            periodSeconds: 10
+#            failureThreshold: 3
+#            successThreshold: 1
+#            timeoutSeconds: 5
+#            tcpSocket:
+#              port: 8080
+#          resources:
+#            limits:
+#              cpu: 1000m
+#              memory: 2Gi
+#            requests:
+#              cpu: 1000m
+#              memory: 2Gi
+#          volumeMounts:
+#            - mountPath: /go/src/app
+#              name: server-data
+#  volumeClaimTemplates:
+#    - metadata:
+#        name: server-data
+#      spec:
+#        accessModes: [ "ReadWriteOnce" ]
+#        resources:
+#          requests:
+#            storage: 15Gi
+#
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: server-data
+#spec:
+#  ports:
+#    - name: "8080"
+#      port: 8080
+#      protocol: TCP
+#      targetPort: 8080
+#  selector:
+#    app: postgres-db
+#  type: ClusterIP
