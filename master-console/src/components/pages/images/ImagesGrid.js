@@ -64,7 +64,7 @@ class ImagesGrid extends Grid {
                 } else if (error.response.status === 403) {
                     alert("action is forbidden")
                 } else if (error.response.status === 400) {
-                    alert("bar request")
+                    alert("bad request")
                 } else {
                     throw error;
                 }

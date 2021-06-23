@@ -8,6 +8,8 @@ const UsersWindow = (props) => {
     const [password, setPassword] = useState("")
     const [repassword, setRePassword] = useState("")
     const [permissions, setPermissions] = useState(props.userToShow !== null ? props.userToShow.permissions : [])
+    const [errorStates, setErrorstates] = useState({username:"", pass:"", repass:""})
+
 
     const onSubmitAction = () => {
         let queryParams = {}
@@ -37,12 +39,28 @@ const UsersWindow = (props) => {
 
     const onUsernameChange = (event) => {
         setUsername(event.target.value)
+        if(event.target.value === ''){
+            setErrorstates({...errorStates, username:"uNameEmpy"})
+        }else{
+            setErrorstates({...errorStates, username:""})
+        }
     }
     const onPasswordChange = (event) => {
         setPassword(event.target.value)
+        if(event.target.value === ''){
+            setErrorstates({...errorStates, pass:"passEmpty"})
+        }else{
+            setErrorstates({...errorStates, pass:""})
+        }
     }
     const onRePasswordChange = (event) => {
         setRePassword(event.target.value)
+        if(event.target.value !== password){
+            setErrorstates({...errorStates, repass:"noMatch"})
+        }else{
+            setErrorstates({...errorStates, repass:""})
+        }
+
     }
     const onPermissionsChange = (event) => {
         setPermissions(Array.from(event.target.selectedOptions, option => option.value))
@@ -53,28 +71,34 @@ const UsersWindow = (props) => {
     return (
         <PopUpWindow {...props} onSubmit={onSubmitAction}>
             <FormGroup key='usernameGroupKey'>
-                <Label for="usernameField">Username</Label>
-                <Input className="classONe" type="text" name="username" id="usernameField" value={username} onChange={onUsernameChange}
+                <Label for="usernameField" 
+                    className={errorStates.username === 'uNameEmpy' ? 'emptyField' : ''}
+                    >Username</Label>
+                <Input type="text" name="username" id={errorStates.username} value={username} onChange={onUsernameChange}
                        style={fieldStyle} required/>
             </FormGroup>
             <FormGroup key='passwordFieldKey'>
-                <Label for="passwordField">Password</Label>
-                <Input type="password" name="password" id="passwordField" value={password} onChange={onPasswordChange}
+                <Label 
+                className={errorStates.pass === 'passEmpty' ? 'emptyField' : ''}
+                for="passwordField">Password</Label>
+                <Input id={errorStates.pass} type="password" name="password" value={password} onChange={onPasswordChange}
                        style={fieldStyle}/>
             </FormGroup>
             <FormGroup key='rePasswordFieldKey'>
-                <Label for="rePasswordField">Reenter Password</Label>
-                <Input type="password" name="rePassword" id="rePasswordField" value={repassword}
+                <Label 
+                className={errorStates.repass === 'noMatch' ? 'passNoMatch' : ''}
+                for="rePasswordField">Reenter Password</Label>
+                <Input  type="password" name="rePassword" id={errorStates.repass} value={repassword}
                        onChange={onRePasswordChange} style={fieldStyle}/>
             </FormGroup>
             <FormGroup key='permissionsFieldKey'>
                 <Label for="permissionsField">Permissions</Label>
                 <Input type={'select'} name='permissions' id='permissionsField' onChange={onPermissionsChange}
-                       style={fieldStyle} multiple={true} value={ALL_USER_PERMISSIONS}>
+                       style={fieldStyle} multiple={true} defaultValue={ALL_USER_PERMISSIONS}>
                     {ALL_USER_PERMISSIONS.map((permissionName,) => {
                         return <option
                             key={permissionName}
-                            value={permissionName}
+                            defaultValue={permissionName}
                             >{permissionName}</option>
                     })
                     }

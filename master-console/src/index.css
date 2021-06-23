@@ -212,3 +212,19 @@ code {
 .UsersPageDiv{
   flex: 80%
 }
+
+.emptyField::after{
+  color: red;
+  font-size: 0.9rem;
+  content: " Can not be empty";
+}
+
+.passNoMatch::after{
+  color: red;
+  font-size: 0.9rem;
+  content: " Passwords must match";
+}
+
+#unameEmpty, #passEmpty, #noMatch {
+  background-color: red;
+}
