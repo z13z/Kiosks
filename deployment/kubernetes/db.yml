@@ -35,7 +35,7 @@ spec:
               memory: 128Mi
           env:
             - name: POSTGRES_PASSWORD
-              value: somePassword
+              value: z13kiosks
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: database-data

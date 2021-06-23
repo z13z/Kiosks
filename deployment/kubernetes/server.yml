@@ -16,6 +16,8 @@ spec:
       containers:
         - name: master-server
           image: zaza13/kiosks/master-server:1.0
+          securityContext:
+            privileged: true
           ports:
             - containerPort: 8080
           livenessProbe:
@@ -28,11 +30,11 @@ spec:
               port: 8080
           resources:
             limits:
-              cpu: 500m
-              memory: 300Mi
+              cpu: 1000m
+              memory: 2Gi
             requests:
-              cpu: 100m
-              memory: 128Mi
+              cpu: 1000m
+              memory: 2Gi
           volumeMounts:
             - mountPath: /go/src/app
               name: server-data
