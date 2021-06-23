@@ -7,7 +7,7 @@ const ImagesWindow = (props) => {
     const [imageName, setImageName] = useState(props.imageToShow !== null ? props.imageToShow.name : "")
     const [imageScript, setImageScript] = useState(props.imageToShow !== null ? props.imageToShow.script : "")
     const [imageApplication, setImageApplication] = useState(props.imageToShow !== null ? props.imageToShow.application : "")
-    const [imageLocalMachine, setImageLocalMachine] = useState(props.imageToShow !== null ? props.imageToShow.localMachine : "")
+    const [imageLocalMachine, setImageLocalMachine] = useState(props.imageToShow !== null ? props.imageToShow.localMachine : false)
 
     const onSubmitAction = () => {
         let queryParams = {}
