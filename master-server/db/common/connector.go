@@ -19,7 +19,7 @@ const dbName = "kiosks"
 const dbDriverName = "postgres"
 const dbUser = "postgres"
 const dbPassword = "z13kiosks"
-const dbHost = "localhost"
+const dbHost = "postgres-db"
 const dbPort = "5432"
 
 func NewDBConnector() *DBConnector {
