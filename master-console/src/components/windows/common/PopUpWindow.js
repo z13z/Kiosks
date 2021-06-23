@@ -29,7 +29,7 @@ const popUpWindow = (props) => {
                isOpen={true}>
             <div style={contentDivStyle}>
                 {props.children.map((field,) => {
-                    return (<div style={fieldStyle}>{field}</div>)
+                    return (<div key={field.key + "Field"} style={fieldStyle}>{field}</div>)
                 })}
             </div>
             <Button color="success" onClick={props.onSubmit}>

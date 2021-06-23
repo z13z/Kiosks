@@ -54,7 +54,7 @@ const UsersWindow = (props) => {
         <PopUpWindow {...props} onSubmit={onSubmitAction}>
             <FormGroup key='usernameGroupKey'>
                 <Label for="usernameField">Username</Label>
-                <Input type="text" name="username" id="usernameField" value={username} onChange={onUsernameChange}
+                <Input className="classONe" type="text" name="username" id="usernameField" value={username} onChange={onUsernameChange}
                        style={fieldStyle} required/>
             </FormGroup>
             <FormGroup key='passwordFieldKey'>
@@ -68,13 +68,14 @@ const UsersWindow = (props) => {
                        onChange={onRePasswordChange} style={fieldStyle}/>
             </FormGroup>
             <FormGroup key='permissionsFieldKey'>
-                <Label for="permissionsField">Password</Label>
+                <Label for="permissionsField">Permissions</Label>
                 <Input type={'select'} name='permissions' id='permissionsField' onChange={onPermissionsChange}
-                       style={fieldStyle} multiple>
+                       style={fieldStyle} multiple={true} value={ALL_USER_PERMISSIONS}>
                     {ALL_USER_PERMISSIONS.map((permissionName,) => {
                         return <option
+                            key={permissionName}
                             value={permissionName}
-                            selected={permissions.includes(permissionName)}>{permissionName}</option>
+                            >{permissionName}</option>
                     })
                     }
                 </Input>

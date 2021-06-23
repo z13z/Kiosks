@@ -11,7 +11,7 @@ import {JWT_TOKEN_KEY} from './Constants'
 
 
 class App extends Component {
-
+    
     render() {
         if (localStorage.getItem(JWT_TOKEN_KEY)) {
             return (
