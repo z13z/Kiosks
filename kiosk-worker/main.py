@@ -2,6 +2,8 @@
 # pip install requests
 # pip install Flask
 # sudo apt install -y scrot
+import logging
+
 from flask import request
 import common
 import configs
@@ -19,7 +21,10 @@ CONTROLLER_SERVICE_PORT = 5000
 def check_authentication():
     if AUTHENTICATION_HEADER in request.headers:
         auth_header = request.headers[AUTHENTICATION_HEADER]
-        return common.get_sha256(auth_header) == servicePassword
+        if not common.get_sha256(auth_header) == servicePassword:
+            logging.info("service called with wrong password: " +auth_header)
+            return False
+        return True
     return False
 
 

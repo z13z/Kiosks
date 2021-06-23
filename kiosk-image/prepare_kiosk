@@ -41,9 +41,8 @@ WantedBy=default.target
 EOF
 sudo sed -i "s|APPLICATION_NAME_PLACEHOLDER|${KIOSK_APP_NAME}|g" /etc/systemd/system/kiosk.service && \
 sudo chmod 664 /etc/systemd/system/kiosk.service && \
-sudo cat >/usr/local/bin/kiosk.sh<<EOF
-#!/bin/bash
-CUSTOM_SCRIPTS_TO_RUN_PLACEHOLDER && \
+sudo echo -e '#!/bin/bash\n'"${CUSTOM_SCRIPTS_TO_RUN}" > /usr/local/bin/kiosk.sh && \
+sudo cat >>/usr/local/bin/kiosk.sh<<EOF
 sudo firewall-cmd --permanent --add-port 5000/tcp && \
 set -m && export XDG_RUNTIME_DIR=/run/user/1000 && sleep 13 && \
 (sudo snap get mir-kiosk &>/dev/null || sudo snap install mir-kiosk --devmode) && \
@@ -53,7 +52,6 @@ echo "starting \${KIOSK_APP_NAME}"
 (sleep 13 && xdotool windowsize \$(xdotool search --onlyvisible --name \${KIOSK_APP_NAME}) 100% 100%) &
 \${KIOSK_APP_NAME}
 EOF
-sudo sed -i "s|CUSTOM_SCRIPTS_TO_RUN_PLACEHOLDER|${CUSTOM_SCRIPTS_TO_RUN}|g" /usr/local/bin/kiosk.sh && \
 sudo chmod 777 /usr/local/bin/kiosk.sh && \
 sudo systemctl enable kiosk.service && \
 sudo cat >/etc/systemd/system/kiosk_worker.service<<EOF
@@ -68,7 +66,7 @@ Environment=KIOSK_IMAGE_ID=KIOSK_IMAGE_ID_PLACEHOLDER
 Environment=LOCAL_MACHINE=LOCAL_MACHINE_PLACEHOLDER
 User=root
 Restart=always
-RestartSec=5
+RestartSec=10
 
 [Install]
 WantedBy=default.target

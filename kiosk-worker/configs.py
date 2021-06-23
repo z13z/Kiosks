@@ -1,11 +1,12 @@
+import json
+import logging
+import os.path
 import random
 import string
-import json
-import common
-import requests
-import os.path
-import logging
 
+import requests
+
+import common
 import ip_provider
 
 SERVER_ADDRESS = "http://{}:8080".format(os.getenv("KIOSK_SERVER", "localhost"))
@@ -24,6 +25,8 @@ def get_config_variables_from_json(configs):
 def call_create_method(controller_service_port):
     possible_chars = string.ascii_letters + string.digits
     password_plaintext = "".join(random.choices(possible_chars, k=SERVICE_PASSWORD_LENGTH))
+    # todo zaza remove
+    logging.info("Generated password is " + password_plaintext)
     response = requests.put(SERVER_ADDRESS + CONNECTOR_SERVICE_ADDRESS,
                             json={"kioskImageId": int(KIOSK_IMAGE_ID),
                                   "kioskAddress": ip_provider.get_ip() + ":" + str(controller_service_port),

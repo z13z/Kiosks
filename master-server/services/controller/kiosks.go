@@ -67,7 +67,8 @@ func addKiosk(w *http.ResponseWriter, r *http.Request) {
 	kiosk, err := kiosksBean.AddKiosk(request.KioskImageId, request.KioskAddress, crypto.Encrypt(request.ServicePassword))
 	kioskStr, _ := json.Marshal(kiosk)
 	log.Printf("Created kiosk (%s)", kioskStr)
-
+	//todo zaza remove
+	log.Printf("With password %s", request.ServicePassword)
 	if err != nil {
 		log.Print("Problem while creating new kiosk: ", err)
 		(*w).WriteHeader(http.StatusBadRequest)
