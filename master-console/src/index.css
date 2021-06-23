@@ -1,3 +1,11 @@
+:root{
+  --elem-main: #2f3e46;
+  --elem-main-shade: #354f52;
+  --elem-bground: #52796f;
+  --elem-bground-shade: #84a98c;
+  --ult-bg: #cad2c5;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,6 +13,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* color: var(--ult-bg); */
 }
 
 code {
@@ -12,8 +21,20 @@ code {
     monospace;
 }
 
+.BaseElem{
+  background-color: var(--elem-bground);
+}
+
 .LoginFormDiv{
-  margin-top: 15vh;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding-left: auto;
+  width: 30rem;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 5px 10px var(--elem-bground-shade);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -182,4 +203,12 @@ code {
   padding-bottom: 7px;
   padding-top: 7px;
   background-color: forestgreen;
+}
+
+.UsersGridDiv{
+  color: red
+}
+
+.UsersPageDiv{
+  flex: 80%
 }

@@ -1,11 +1,11 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 function navigationWidget() {
-    let links = [{address: "/", name: "home"}, {address: "/kiosks", name: "kiosks"}, {
+    let links = [{ address: "/", name: "home" }, { address: "/kiosks", name: "kiosks" }, {
         address: "images",
         name: "images"
-    }, {address: "users", name: "users"}]
+    }, { address: "users", name: "users" }]
     return (
         <div className="LeftPanel">
             <div className="NavigationDiv">

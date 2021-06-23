@@ -1,5 +1,4 @@
 import {React, useState} from "react"
-import "./UsersPage.css"
 import RightPanel from "../common/RightPanel/RightPanel"
 import SearchPanel from "../common/SearchPanel/SearchPanel"
 import UsersGrid from "./UsersGrid";

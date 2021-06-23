@@ -31,25 +31,25 @@ const LoginPage = () => {
     }
 
     return (
-        <div className='LoginFormDiv'>
-            <div className='LogoDiv'>
+        <div className='LoginFormDiv BaseElem'>
+            <div className='LogoDiv ChildElem'>
                 <img src={logo} alt="kiosk logo"/>
                 <h1>Kiosk Management System</h1>
             </div>
-            <div className='InputField'>
+            <div className='InputField ChildElem'>
                 <label key="usernameField">
                     Username
                 </label>
                 <input type="text" onChange={updateUsername} />
             </div>
-            <div className='InputField'>
+            <div className='InputField ChildElem'>
                 <label key="passwordField">
                     Password
                 </label>
                 <input type="password" onChange={updatePassword} />
 
             </div>
-            <div >
+            <div className="ChildElem">
                 <button className="ClickButton" key="loginButton" onClick={loginButtonAction}>Login</button>
             </div>
         </div>
