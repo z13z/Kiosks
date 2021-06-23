@@ -1,6 +1,5 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import './NavigationWidget.css'
 
 function navigationWidget() {
     let links = [{address: "/", name: "home"}, {address: "/kiosks", name: "kiosks"}, {

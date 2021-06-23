@@ -1,5 +1,4 @@
 import React from 'react'
-import './RightPanel.css'
 
 function rightPanel(props) {
     return (

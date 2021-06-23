@@ -3,7 +3,6 @@ import NextArrow from '../../../icons/next-arrow.svg'
 import PrevArrow from '../../../icons/prev-arrow.svg'
 import FirstArrow from '../../../icons/double-prev-arrow.svg'
 import LastArrow from '../../../icons/double-next-arrow.svg'
-import './Pagination.css'
 
 const GridPagination = (props) => {
     let currentPage = props.currentPage

@@ -1,12 +1,13 @@
 import React from 'react'
-import './LoginPage.css'
 import axios from "axios"
-import {JWT_TOKEN_KEY, USER_PERMISSIONS_KEY, USERNAME_KEY} from "../../../Constants"
+import { JWT_TOKEN_KEY, USER_PERMISSIONS_KEY, USERNAME_KEY } from "../../../Constants"
+
+import logo from '../../icons/800x800.png'
 
 const LOGIN_PAGE_PATH = '/login'
 
 const LoginPage = () => {
-    let userData = {username: null, password: null};
+    let userData = { username: null, password: null };
 
     const updateUsername = (event) => {
         userData.username = event.target.value
@@ -18,7 +19,7 @@ const LoginPage = () => {
         localStorage.setItem(JWT_TOKEN_KEY, response.data.jwt)
         const jwtBody = JSON.parse(atob(response.data.jwt.split(".")[1]))
         localStorage.setItem(USERNAME_KEY, jwtBody.username)
-        localStorage.setItem(USER_PERMISSIONS_KEY, jwtBody.permissions.replaceAll('\"', "").slice(1, -1))
+        localStorage.setItem(USER_PERMISSIONS_KEY, jwtBody.permissions.replaceAll('"', "").slice(1, -1))
         window.location.reload()
     }
     const loginErrorAction = (error) => {
@@ -31,22 +32,25 @@ const LoginPage = () => {
 
     return (
         <div className='LoginFormDiv'>
-            <div>
+            <div className='LogoDiv'>
+                <img src={logo} alt="kiosk logo"/>
+                <h1>Kiosk Management System</h1>
+            </div>
+            <div className='InputField'>
                 <label key="usernameField">
-                    username: <label>
-                    <input type="text" onChange={updateUsername}/>
+                    Username
                 </label>
-                </label>
+                <input type="text" onChange={updateUsername} />
             </div>
-            <div>
+            <div className='InputField'>
                 <label key="passwordField">
-                    password: <label>
-                    <input type="password" onChange={updatePassword}/>
+                    Password
                 </label>
-                </label>
+                <input type="password" onChange={updatePassword} />
+
             </div>
-            <div>
-                <button key="loginButton" onClick={loginButtonAction}>login</button>
+            <div >
+                <button className="ClickButton" key="loginButton" onClick={loginButtonAction}>Login</button>
             </div>
         </div>
     )

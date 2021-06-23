@@ -1,4 +1,3 @@
-import './KiosksPage.css'
 import Grid from "../common/Grid/Grid";
 import {Button} from "reactstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";

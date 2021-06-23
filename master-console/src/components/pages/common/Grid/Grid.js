@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import './Grid.css'
 import axios from "axios";
 import './Pagination'
 import GridPagination from "./Pagination";

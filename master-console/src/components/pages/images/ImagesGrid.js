@@ -1,4 +1,3 @@
-import './ImagesPage.css'
 import Grid from "../common/Grid/Grid";
 import axios from "axios";
 import {JWT_TOKEN_KEY} from "../../../Constants";

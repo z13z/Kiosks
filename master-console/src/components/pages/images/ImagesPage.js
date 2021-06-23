@@ -1,5 +1,4 @@
 import {React, useState} from "react"
-import "./ImagesPage.css"
 import RightPanel from "../common/RightPanel/RightPanel"
 import SearchPanel from "../common/SearchPanel/SearchPanel"
 import ImagesGrid from "./ImagesGrid";

@@ -11,3 +11,175 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.LoginFormDiv{
+  margin-top: 15vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.InputField{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 3rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.LogoDiv{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.LogoDiv img {
+  width: 5rem;
+}
+
+.ClickButton {
+  margin: 1rem;
+  width: 10vw;
+  height: auto;
+  font-size: 1rem;
+}
+
+.LeftPanel{
+  width: max-content;
+  flex: 20%;
+}
+
+.NavigationList {
+  list-style-type: none;
+  padding-inline-start: 0;
+}
+
+.NavigationList > a > li{
+  display: block;
+  width: 100%;
+  margin: auto;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 3px #ccc;
+  padding: 12px;
+  text-align: center;
+  background-color: aquamarine;
+}
+
+.NavigationList > a > li:hover{
+  background-color: forestgreen;
+}
+
+.NavigationList > a > li:hover{
+  color: yellow;
+}
+
+.NavigationList > a {
+  text-decoration:none;
+}
+
+.NavigationList > a > li {
+  color: darkslategray;
+  display: block;
+  width: inherit;
+  height: inherit;
+}
+
+.NavigationList > a > li {
+  text-decoration:none;
+  color: darkslategray;
+}
+
+.StatisticsPageDiv{
+  flex: 80%
+}
+
+.KiosksGridDiv{
+  color: red
+}
+
+.KiosksPageDiv{
+  flex: 80%
+}
+
+.ImagesGridDiv{
+  color: red
+}
+
+.ImagePageDiv{
+  flex: 80%
+}
+
+.SearchPanelDiv{
+  flex: 80%;
+  display: flex;
+  margin: 12px;
+  background-color: darkblue;
+  width: 95%;
+}
+
+.SearchPanelComponent{
+  margin: 5px;
+  color: lightblue;
+}
+
+.RightPanelDiv{
+  width: max-content;
+  flex: 80%;
+}
+
+.PaginationIcon {
+  width: 24px;
+  height: 24px;
+  opacity: 70%;
+  margin-bottom: -9px;
+}
+
+.PaginationIcon:hover {
+  opacity: 100%;
+}
+
+.PaginationPanel {
+  margin-left: 12px;
+}
+
+.GridTable {
+  width: 95%;
+  border-collapse: collapse;
+  height: 90%;
+  margin: 22px;
+  border: 1px solid lightgrey;
+}
+
+.GridTableDiv{
+  border: 1px solid lightgrey;
+  margin: 12px;
+  width: 95%;
+}
+
+.GridRow {
+  border: 1px solid lightgrey;
+}
+
+.GridRow:hover{
+  background-color: #61dafb;
+}
+
+.GridColumn {
+  padding-bottom: 3px;
+  padding-top: 3px;
+  border: 1px solid lightgrey;
+  padding-left: 16px;
+}
+
+.GridHeader {
+  border: 1px solid lightgrey;
+  text-align: left;
+  padding-left: 16px;
+  padding-bottom: 7px;
+  padding-top: 7px;
+  background-color: forestgreen;
+}

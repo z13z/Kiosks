@@ -1,5 +1,4 @@
 import React from 'react'
-import './SearchPanel.css'
 
 function searchPanel(props) {
     return (
